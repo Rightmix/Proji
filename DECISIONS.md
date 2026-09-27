@@ -13,3 +13,8 @@ Decisions may be **Confirmed**, **Proposed**, **Under review** or **Superseded**
 | D-007 | 2026-09-27 | Defer subscriptions and personalized nutrition beyond initial ordering MVP | Proposed sequencing | Reduce early complexity and clinical-claim risk |
 
 Record alternatives, impact and approval before major architectural changes.
+
+| D-008 | 2026-09-27 | Stage 4 visual assets use hybrid food photography and AI-assisted asset production, manually aligned and approved | Confirmed planning direction | Consistent realistic bowl layers and distinct animations for all 15 ingredients |
+| D-009 | 2026-09-27 | Mobile bowl preview remains fixed near top while ingredient options scroll beneath | Confirmed planning direction | Responsive sticky layout with short-screen and safe-area fallbacks |
+| D-010 | 2026-09-27 | First Stage 4 milestone includes all ingredient animations with explicitly illustrative nutrition and pricing | Confirmed planning scope | Validated recipe integration and live orders deferred; no code authorized yet |
+| D-011 | 2026-09-27 | Approved four-screen mockup is master design reference | Confirmed requirement; reference asset pending | Obtain actual mockup before implementation; no generic-form substitution |
