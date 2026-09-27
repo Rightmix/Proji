@@ -16,3 +16,6 @@ Document task-specific functional, permission, mobile usability and operational 
 
 ## Risks and deferred decisions
 Confirm recipes, data sources, operational constraints, security, third-party integrations and costs before committing to production behavior. Do not mark complete without review.
+
+## Cross-stage requirement: approved customization mockup
+Stage 2 must preserve the previously approved four-screen customization interface as the master visual reference. Supply and audit the actual mockup before Stage 4 UI implementation. Shared tokens should support white/warm-grey surfaces, natural-green selected states, deep-green actions, matte-black bowl, circular ingredient thumbnails and clean modern sans-serif typography. Stage 4 requires a fixed-near-top responsive bowl preview while ingredients scroll beneath, with a sticky footer and reduced-motion/accessibility states. See [Stage 4 detailed plan](STAGE_04_BOWL_BUILDER.md). Do not redesign the approved layout without approval.
