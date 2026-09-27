@@ -1,0 +1,3 @@
+# Claude Development Workflow
+
+At the start of each task read README, PROJECT_REQUIREMENTS, PROJECT_ROADMAP, DECISIONS and the relevant docs/stages plan; inspect GitHub Issues and current code. State the proposed plan and any decisions requiring approval. Work on one bounded stage or issue at a time, preferably through a feature branch and pull request. Run available tests and report actual outcomes, including skipped tests and unverified integrations. Never claim a deployment or integration succeeded without checking. Update project documents and related Issues whenever scope or status changes. Do not silently expand scope or expose secrets. End each session with changed files, test evidence, PR/commit, outstanding issues and next action.
