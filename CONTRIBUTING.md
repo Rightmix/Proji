@@ -1,0 +1,3 @@
+# Contributing to PROJI
+
+Use scoped branches (feature/stage-XX-description, fix/description, docs/description), pull requests and review before merging code. Inspect existing work first. Do not commit .env files, service-role keys, payment credentials or customer data. Document and test database migrations and rollback. Run lint, typecheck, unit and end-to-end tests appropriate to each change. Require server-side pricing and authorization checks. Update roadmap, requirements, decisions, stage plan, related Issues and changelog for scope changes. Do not mark tasks complete without evidence. Ask approval for destructive operations, paid services and production releases.
