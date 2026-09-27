@@ -22,3 +22,6 @@ Stages 1–8 establish the ordering and operations MVP; validate recipe data and
 
 ## Stage details
 Each stage has a plan in docs/stages and a corresponding GitHub Issue. The Issue is the task tracker; this roadmap is the canonical cross-stage status summary. Changes must update affected requirements, issues, decisions and changelog.
+
+## Stage 4 scope expansion — approved planning update (2026-09-27)
+Stage 4 is now a visual animated bowl configurator, not a conventional ordering form. Approved first milestone: all 15 proposed ingredient animations, hybrid photography/AI-assisted transparent assets, fixed-near-top mobile bowl preview, illustrative nutrition and prices. Detailed scope: [Stage 4 plan](docs/stages/STAGE_04_BOWL_BUILDER.md), [Issue #4](https://github.com/Rightmix/Proji/issues/4). Expanded visual milestone estimate: **16–30 sequential working days, provisional**, replacing the previous Stage 4 4–7-day estimate. Stage 4 remains PLANNED; Stage 1 remains IN PROGRESS. Later integrations: Stage 2 design fidelity, Stage 5 saved bowls, Stage 6 cart, Stage 7 validated recipes, Stage 8 kitchen, Stage 9 subscriptions, Stage 11 testing. No application implementation authorized by this update.
