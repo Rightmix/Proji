@@ -20,8 +20,13 @@ create table public.user_roles (
 );
 create index user_roles_role_idx on public.user_roles (role);
 
+-- Keep SECURITY DEFINER helpers out of the exposed public API schema.
+create schema if not exists private;
+revoke all on schema private from public, anon;
+grant usage on schema private to authenticated;
+
 -- Role check used by RLS policies. SECURITY DEFINER avoids recursive RLS on user_roles.
-create or replace function public.has_role(check_role public.app_role)
+create or replace function private.has_role(check_role public.app_role)
 returns boolean
 language sql
 stable
@@ -33,8 +38,8 @@ as $$
     where ur.user_id = (select auth.uid()) and ur.role = check_role
   );
 $$;
-revoke all on function public.has_role(public.app_role) from public;
-grant execute on function public.has_role(public.app_role) to authenticated;
+revoke all on function private.has_role(public.app_role) from public, anon;
+grant execute on function private.has_role(public.app_role) to authenticated;
 
 -- New auth users get a profile and ONLY the customer role. Privileged roles are granted by admins.
 create or replace function public.handle_new_user()
@@ -82,7 +87,7 @@ grant select, insert, delete on public.user_roles to authenticated;
 create policy "profiles: read own" on public.profiles
   for select to authenticated using (id = (select auth.uid()));
 create policy "profiles: admin reads all" on public.profiles
-  for select to authenticated using ((select public.has_role('admin')));
+  for select to authenticated using ((select private.has_role('admin')));
 create policy "profiles: update own" on public.profiles
   for update to authenticated
   using (id = (select auth.uid()))
@@ -91,11 +96,11 @@ create policy "profiles: update own" on public.profiles
 create policy "user_roles: read own" on public.user_roles
   for select to authenticated using (user_id = (select auth.uid()));
 create policy "user_roles: admin reads all" on public.user_roles
-  for select to authenticated using ((select public.has_role('admin')));
+  for select to authenticated using ((select private.has_role('admin')));
 create policy "user_roles: admin grants" on public.user_roles
   for insert to authenticated
-  with check ((select public.has_role('admin')) and granted_by = (select auth.uid()));
+  with check ((select private.has_role('admin')) and granted_by = (select auth.uid()));
 -- Admins may revoke roles, but not their own (prevents accidental lock-out).
 create policy "user_roles: admin revokes" on public.user_roles
   for delete to authenticated
-  using ((select public.has_role('admin')) and user_id <> (select auth.uid()));
+  using ((select private.has_role('admin')) and user_id <> (select auth.uid()));
