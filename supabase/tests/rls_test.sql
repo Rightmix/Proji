@@ -62,7 +62,14 @@ do $$ declare n int; begin
   delete from public.user_roles where user_id = '00000000-0000-0000-0000-00000000000a';
   get diagnostics n = row_count;
   assert n = 0, 'FAIL customer deleted admin role';
-  assert not public.has_role('admin'), 'FAIL has_role(admin) true for customer';
+  assert private.has_role('admin'), 'FAIL helper execution unexpectedly unavailable';
+exception when insufficient_privilege then
+  -- A customer is expected to have EXECUTE on the helper but the helper must return false.
+  raise;
+end $$;
+-- Explicit result check outside the assertion block keeps the intent clear.
+do $$ begin
+  assert not private.has_role('admin'), 'FAIL has_role(admin) true for customer';
 end $$;
 reset role;
 
@@ -70,7 +77,7 @@ reset role;
 select pg_temp.act_as('00000000-0000-0000-0000-00000000000d');
 set role authenticated;
 do $$ declare n int; begin
-  assert public.has_role('kitchen'), 'FAIL kitchen role missing';
+  assert private.has_role('kitchen'), 'FAIL kitchen role missing';
   select count(*) into n from public.profiles; assert n = 1, 'FAIL kitchen reads all profiles';
   begin
     insert into public.user_roles (user_id, role, granted_by)
