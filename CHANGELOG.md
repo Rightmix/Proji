@@ -12,3 +12,6 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 - Expanded Stage 4 file-by-file implementation plan, selection rules, animation engine, acceptance tests and downstream integration dependencies.
 - Revised provisional Stage 4 visual milestone effort to 16–30 sequential working days; Stage 4 remains planned and application implementation remains unauthorized.
 - Updated related roadmap, requirements, design-stage notes, decision log and GitHub planning Issues.
+
+## 2026-09-29
+- Stage 1 foundation scaffold (app, routes, auth, roles/RLS migration, tests, CI). Hosted Supabase/Vercel verification pending.

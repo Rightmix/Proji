@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+/* Provisional brand tokens from PROJECT_REQUIREMENTS.md. Full design system is Stage 2. */
+@theme {
+  --color-proji-lime: #70c043;
+  --color-proji-black: #111111;
+  --color-proji-offwhite: #f5f5f5;
+  --color-proji-gray: #666666;
+  --color-proji-beige: #d9c7a1;
+}
+
+body {
+  @apply bg-proji-offwhite text-proji-black antialiased;
+}
