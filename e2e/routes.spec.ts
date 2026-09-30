@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const publicRoutes: [string, RegExp][] = [
-  ['/', /^PROJI$/],
+  ['/', /^Build Your Bowl\. Build Your Body\.$/],
   ['/menu', /^Menu$/],
   ['/build', /Build your bowl/],
   ['/login', /Sign in/],

@@ -1,6 +1,6 @@
 # Stage 02 — Design system
 
-**Status:** Planned. See PROJECT_ROADMAP.md for provisional estimate.
+**Status:** In review (2026-09-30). Implementation on `stage-2/design-system`; see STAGE_2_REPORT.md, STAGE_02_ACCEPTANCE_TESTS.md and docs/DESIGN_SYSTEM.md. See PROJECT_ROADMAP.md for provisional estimate.
 
 ## Objective and scope
 Brand tokens, typography, reusable UI components, responsive navigation, homepage and image integration.

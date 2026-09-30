@@ -10,7 +10,7 @@ export function RequireRole({ allow, children }: { allow: readonly Role[]; child
 
   if (status === 'loading') {
     return (
-      <p role="status" className="p-6 text-proji-gray">
+      <p role="status" className="p-6 text-ink-muted">
         Checking access…
       </p>
     )

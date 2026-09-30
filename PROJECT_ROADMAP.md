@@ -5,7 +5,7 @@
 | Stage | Scope | Estimate | Status |
 |---|---|---|---|
 | 01 | Project foundation: app, Supabase, roles, testing, deployment | 1–2 days | In progress |
-| 02 | Branding and responsive design system | 2–4 days | Planned |
+| 02 | Branding and responsive design system | 2–4 days | In review |
 | 03 | Signature bowl menu and catalog | 2–3 days | Planned |
 | 04 | Four-step Build Your Bowl and live estimates | 4–7 days | Planned |
 | 05 | Customer accounts, addresses, saved bowls | 2–4 days | Planned |

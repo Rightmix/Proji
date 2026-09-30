@@ -15,3 +15,8 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 
 ## 2026-09-29
 - Stage 1 foundation scaffold (app, routes, auth, roles/RLS migration, tests, CI). Hosted Supabase/Vercel verification pending.
+
+## 2026-09-30: Stage 2 design system (in review)
+- Tokens, self-hosted typography, UI primitives reusable by Stage 4, responsive sticky navigation, homepage, asset registry and accessibility/motion foundations.
+- Vitest 76/76, Playwright 60/60 (including axe WCAG 2.2 AA), lint, format and build all pass locally. Hosted preview pending.
+- The homepage hero is a reference-placeholder image. The four-screen mockup candidate was added to docs/design and needs confirmation.
