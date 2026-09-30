@@ -1,7 +1,18 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
-const routes = ['/', '/menu', '/build', '/login', '/unauthorized', '/no-such-page']
+const routes = [
+  '/',
+  '/menu',
+  '/menu?base=millet&available=1',
+  '/menu/kerala-pepper-chicken-kanji',
+  '/menu/tandoori-paneer-red-rice-kanji',
+  '/menu/does-not-exist',
+  '/build',
+  '/login',
+  '/unauthorized',
+  '/no-such-page',
+]
 
 for (const path of routes) {
   test(`A-01 axe: ${path} has no serious/critical violations`, async ({ page }) => {
