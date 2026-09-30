@@ -18,4 +18,4 @@ Inspect existing repo. Initialize React + TypeScript + Vite, Tailwind, React Rou
 - No secrets committed; setup and rollback documented.
 - Actual test output and deployment URL recorded in STAGE_1_REPORT.md.
 
-**Verified so far:** Repository creation only. All other items pending evidence.
+**Verified so far (2026-09-29):** App scaffold, routes, auth client, roles migration and RLS implemented on branch `stage-1/foundation`; lint, unit (18), E2E (20) and local RLS tests pass. Hosted Supabase auth, Vercel preview and GitHub CI pending — see STAGE_1_REPORT.md.
