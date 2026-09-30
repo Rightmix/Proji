@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 const publicRoutes: [string, RegExp][] = [
   ['/', /^Build Your Bowl\. Build Your Body\.$/],
   ['/menu', /^Menu$/],
-  ['/build', /Build your bowl/],
+  ['/build', /^Customize$/], // Stage 4 master title
   ['/login', /Sign in/],
   ['/unauthorized', /Access denied/],
   ['/no-such-page', /Page not found/],

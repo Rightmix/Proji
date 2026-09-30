@@ -34,6 +34,6 @@ White and warm-grey surfaces, natural-green selection states, deep-green primary
 `public/assets/{brand,home,…}`, registered in `src/lib/assets.ts` with alt text, intrinsic size and a `status` of `approved` or `reference-placeholder`. Stage 4 layers go under `public/assets/bowl-builder/…` as planned. The homepage hero is a **reference placeholder**: it is cropped from an AI-generated brand image and must be replaced with approved photography before launch.
 
 ## Dependencies
-- **Four-screen customisation mockup:** a candidate is saved at `docs/design/four-screen-customize-reference-candidate.jpg` (from the Claude project uploads, 2026-09-27). It needs owner confirmation that it is the approved master before any Stage 4 UI work.
+- **Four-screen customisation mockup:** **confirmed as the approved master on 2026-09-30.** Full resolution: `docs/design/approved/four-screen-customize-master.png`. Stage 4 comparison: `docs/design/stage-4/master-vs-implementation.jpg`.
 - Final logo artwork: the current wordmark and favicon are provisional.
 - Approved food photography.

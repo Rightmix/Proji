@@ -34,7 +34,7 @@ describe('public routes', () => {
   it.each([
     ['/', /build your bowl\. build your body\./i],
     ['/menu', /^menu$/i],
-    ['/build', /build your bowl/i],
+    ['/build', /^customize$/i], // Stage 4: approved master top bar title
     ['/login', /sign in/i],
     ['/unauthorized', /access denied/i],
     ['/does-not-exist', /page not found/i],

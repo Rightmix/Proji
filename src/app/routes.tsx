@@ -7,16 +7,20 @@ import Account from '../pages/Account'
 import Home from '../pages/Home'
 import Menu from '../pages/Menu'
 import BowlDetail from '../pages/BowlDetail'
-import { Admin, Build, Kitchen, NotFound, Unauthorized } from '../pages/placeholders'
+import { Admin, Kitchen, NotFound, Unauthorized } from '../pages/placeholders'
 
 export const routes: RouteObject[] = [
+  {
+    // Stage 4 builder: full-screen layout per the approved master; own lazy chunk.
+    path: '/build',
+    lazy: () => import('../pages/CustomizePage').then((m) => ({ Component: m.default })),
+  },
   {
     element: <CustomerLayout />,
     children: [
       { path: '/', element: <Home /> },
       { path: '/menu', element: <Menu /> },
       { path: '/menu/:slug', element: <BowlDetail /> },
-      { path: '/build', element: <Build /> },
       { path: '/login', element: <Login /> },
       {
         path: '/account',

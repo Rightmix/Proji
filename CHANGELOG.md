@@ -25,3 +25,8 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 - Added the catalog domain model with a validated-data gate for price, nutrition and allergens, a repository interface, derived filters with URL state, the `/menu` and `/menu/:slug` pages, availability states, image fallbacks, and loading/error/empty states.
 - Added labelled development fixture bowls. They are never shown in production by default and carry no prices, nutrition or allergens. No database changes.
 - Tests: Vitest 115/115 and Playwright 90/90 (including axe on the menu and detail pages) pass locally.
+
+## 2026-09-30: Stage 4 bowl builder (draft, in review)
+- Saved the approved four-screen master to `docs/design/approved/` and removed the downscaled candidate.
+- The `/build` animated builder: sticky layered bowl, BASE/PROTEIN/FLAVOUR/TOPPING steps, selection limits, live illustrative macros and price, View Nutrition, share link, Stage 3 presets, and a prototype Add to Cart.
+- 30 procedural prototype assets (about 430 KB) with a generator script and manifest. No database changes.
