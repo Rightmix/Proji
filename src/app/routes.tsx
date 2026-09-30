@@ -5,7 +5,9 @@ import { AREA_ROLES } from '../auth/roles'
 import Login from '../pages/Login'
 import Account from '../pages/Account'
 import Home from '../pages/Home'
-import { Admin, Build, Kitchen, Menu, NotFound, Unauthorized } from '../pages/placeholders'
+import Menu from '../pages/Menu'
+import BowlDetail from '../pages/BowlDetail'
+import { Admin, Build, Kitchen, NotFound, Unauthorized } from '../pages/placeholders'
 
 export const routes: RouteObject[] = [
   {
@@ -13,6 +15,7 @@ export const routes: RouteObject[] = [
     children: [
       { path: '/', element: <Home /> },
       { path: '/menu', element: <Menu /> },
+      { path: '/menu/:slug', element: <BowlDetail /> },
       { path: '/build', element: <Build /> },
       { path: '/login', element: <Login /> },
       {

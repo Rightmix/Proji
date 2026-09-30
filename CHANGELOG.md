@@ -20,3 +20,8 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 - Tokens, self-hosted typography, UI primitives reusable by Stage 4, responsive sticky navigation, homepage, asset registry and accessibility/motion foundations.
 - Vitest 76/76, Playwright 60/60 (including axe WCAG 2.2 AA), lint, format and build all pass locally. Hosted preview pending.
 - The homepage hero is a reference-placeholder image. The four-screen mockup candidate was added to docs/design and needs confirmation.
+
+## 2026-09-30: Stage 3 menu and catalog (draft, in review)
+- Added the catalog domain model with a validated-data gate for price, nutrition and allergens, a repository interface, derived filters with URL state, the `/menu` and `/menu/:slug` pages, availability states, image fallbacks, and loading/error/empty states.
+- Added labelled development fixture bowls. They are never shown in production by default and carry no prices, nutrition or allergens. No database changes.
+- Tests: Vitest 115/115 and Playwright 90/90 (including axe on the menu and detail pages) pass locally.

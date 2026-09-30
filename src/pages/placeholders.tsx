@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { Placeholder } from '../components/Placeholder'
 import { BowlSurface } from '../components/ui/BowlSurface'
 
-export const Menu = () => <Placeholder title="Menu">Signature bowls arrive in Stage 3.</Placeholder>
 export const Build = () => (
   <Placeholder title="Build your bowl">
     <p>The animated bowl builder arrives in Stage 4.</p>

@@ -23,6 +23,8 @@ export default defineConfig({
     : {
         command: 'npm run build && npm run preview -- --port 4173 --strictPort',
         url: baseURL,
+        // Preview build with clearly-labelled development fixtures (never the production default).
+        env: { VITE_CATALOG_SOURCE: 'fixtures' },
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
       },
