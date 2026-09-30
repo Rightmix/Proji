@@ -4,7 +4,8 @@ import { RequireRole } from '../auth/RequireRole'
 import { AREA_ROLES } from '../auth/roles'
 import Login from '../pages/Login'
 import Account from '../pages/Account'
-import { Admin, Build, Home, Kitchen, Menu, NotFound, Unauthorized } from '../pages/placeholders'
+import Home from '../pages/Home'
+import { Admin, Build, Kitchen, Menu, NotFound, Unauthorized } from '../pages/placeholders'
 
 export const routes: RouteObject[] = [
   {

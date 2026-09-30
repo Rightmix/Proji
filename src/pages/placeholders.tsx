@@ -1,25 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Placeholder } from '../components/Placeholder'
+import { BowlSurface } from '../components/ui/BowlSurface'
 
-export function Home() {
-  return (
-    <section className="mx-auto max-w-2xl px-4 py-16 text-center">
-      <h1 className="text-4xl font-extrabold">PROJI</h1>
-      <p className="mt-2 text-lg">
-        Build Your Bowl. <span className="text-proji-lime">Build Your Body.</span>
-      </p>
-      <Link
-        to="/build"
-        className="mt-8 inline-block rounded-full bg-proji-lime px-6 py-3 font-semibold text-proji-black"
-      >
-        Build your bowl
-      </Link>
-    </section>
-  )
-}
 export const Menu = () => <Placeholder title="Menu">Signature bowls arrive in Stage 3.</Placeholder>
 export const Build = () => (
-  <Placeholder title="Build your bowl">The animated bowl builder arrives in Stage 4.</Placeholder>
+  <Placeholder title="Build your bowl">
+    <p>The animated bowl builder arrives in Stage 4.</p>
+    <BowlSurface emptyLabel="Your bowl builds here" className="mx-auto mt-8 w-56" />
+  </Placeholder>
 )
 export const Admin = () => (
   <Placeholder title="Admin & R&D">Ingredient and recipe management arrive in Stage 7.</Placeholder>

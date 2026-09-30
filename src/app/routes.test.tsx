@@ -32,7 +32,7 @@ const signedIn = (roles: Role[]): Partial<AuthState> => ({
 
 describe('public routes', () => {
   it.each([
-    ['/', /^proji$/i],
+    ['/', /build your bowl\. build your body\./i],
     ['/menu', /^menu$/i],
     ['/build', /build your bowl/i],
     ['/login', /sign in/i],

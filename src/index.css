@@ -1,14 +1,120 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/fraunces/wght-italic.css';
 
-/* Provisional brand tokens from PROJECT_REQUIREMENTS.md. Full design system is Stage 2. */
+/*
+ * PROJI design tokens. Source of truth: src/design/tokens.ts (drift-tested).
+ * Legacy proji-* names from Stage 1 are kept as aliases.
+ */
 @theme {
-  --color-proji-lime: #70c043;
-  --color-proji-black: #111111;
-  --color-proji-offwhite: #f5f5f5;
-  --color-proji-gray: #666666;
-  --color-proji-beige: #d9c7a1;
+  --color-canvas: #f4f2ee;
+  --color-surface: #ffffff;
+  --color-surface-muted: #ece9e3;
+  --color-line: #e2ddd4;
+  --color-line-strong: #c9c2b5;
+  --color-ink: #151714;
+  --color-ink-muted: #575a53;
+  --color-ink-inverse: #ffffff;
+  --color-select-50: #eef6e9;
+  --color-select-100: #dcedd1;
+  --color-select-500: #599a3d;
+  --color-select-700: #2f6d33;
+  --color-action-600: #2e6b34;
+  --color-action-700: #245a2a;
+  --color-action-800: #1c4821;
+  --color-lime: #70c043;
+  --color-beige: #d9c7a1;
+  --color-bowl-900: #0e0e0e;
+  --color-bowl-800: #171717;
+  --color-bowl-700: #262626;
+  --color-danger: #b3261e;
+  --color-focus: #2e6b34;
+
+  /* Stage 1 aliases */
+  --color-proji-lime: var(--color-lime);
+  --color-proji-black: var(--color-ink);
+  --color-proji-offwhite: var(--color-canvas);
+  --color-proji-gray: var(--color-ink-muted);
+  --color-proji-beige: var(--color-beige);
+
+  --font-sans:
+    'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 1px 2px rgb(21 23 20 / 0.06), 0 1px 1px rgb(21 23 20 / 0.04);
+  --shadow-raised: 0 6px 20px -6px rgb(21 23 20 / 0.18);
+  --shadow-bowl: 0 18px 40px -12px rgb(0 0 0 / 0.45);
+
+  --text-display: 2.5rem;
+  --text-display--line-height: 1.05;
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.2;
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1rem;
+  --text-label--letter-spacing: 0.08em;
+
+  --spacing-header: 3.5rem;
+  --spacing-footer: 5rem;
+  --spacing-touch: 2.75rem;
+  --container-content: 72rem;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-slow: 360ms;
 }
 
-body {
-  @apply bg-proji-offwhite text-proji-black antialiased;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--spacing-header) + env(safe-area-inset-top));
+  }
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Safe-area + sticky primitives (reused by Stage 4 sticky bowl/footer). */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility px-safe {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+@utility transition-ui {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../auth/context'
+import { buttonClasses } from '../components/ui/buttonStyles'
 
 export default function Login() {
   const { status, configured, signInWithPassword, signUp } = useAuth()
@@ -23,15 +24,15 @@ export default function Login() {
   }
 
   return (
-    <section className="mx-auto max-w-sm px-4 py-10">
-      <h1 className="text-2xl font-bold">Sign in</h1>
+    <section className="mx-auto w-full max-w-sm px-safe py-12">
+      <h1 className="font-display text-title font-semibold sm:text-3xl">Sign in</h1>
       {!configured && (
-        <p role="alert" className="mt-3 rounded bg-proji-beige/40 p-3 text-sm">
+        <p role="alert" className="mt-4 rounded-md border border-beige bg-beige/30 p-3 text-sm">
           Authentication is not configured in this environment.
         </p>
       )}
       <form onSubmit={submit('in')} className="mt-6 space-y-3">
-        <label className="block text-sm">
+        <label className="block text-sm font-medium">
           Email
           <input
             type="email"
@@ -39,10 +40,10 @@ export default function Login() {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full rounded border p-2"
+            className="mt-1 block min-h-touch w-full rounded-md border border-line-strong bg-surface px-3 text-base transition-ui focus:border-action-600"
           />
         </label>
-        <label className="block text-sm">
+        <label className="block text-sm font-medium">
           Password
           <input
             type="password"
@@ -51,13 +52,13 @@ export default function Login() {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full rounded border p-2"
+            className="mt-1 block min-h-touch w-full rounded-md border border-line-strong bg-surface px-3 text-base transition-ui focus:border-action-600"
           />
         </label>
         <button
           type="submit"
           disabled={busy || !configured}
-          className="w-full rounded bg-proji-black py-2 font-semibold text-proji-offwhite disabled:opacity-50"
+          className={buttonClasses('primary', 'lg', 'w-full')}
         >
           Sign in
         </button>
@@ -65,7 +66,7 @@ export default function Login() {
           type="button"
           disabled={busy || !configured}
           onClick={() => void submit('up')()}
-          className="w-full rounded border border-proji-black py-2 font-semibold disabled:opacity-50"
+          className={buttonClasses('secondary', 'lg', 'w-full')}
         >
           Create account
         </button>
