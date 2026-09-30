@@ -7,7 +7,7 @@
 | 01 | Project foundation: app, Supabase, roles, testing, deployment | 1–2 days | In progress |
 | 02 | Branding and responsive design system | 2–4 days | In review |
 | 03 | Signature bowl menu and catalog | 2–3 days | In review (draft PR) |
-| 04 | Four-step Build Your Bowl and live estimates | 4–7 days | Planned |
+| 04 | Four-step Build Your Bowl and live estimates | 16–30 days (visual milestone) | In review (draft PR) |
 | 05 | Customer accounts, addresses, saved bowls | 2–4 days | Planned |
 | 06 | Cart, checkout, delivery scheduling, payments | 4–6 days | Planned |
 | 07 | Admin/R&D: ingredients, standardized recipes, macros, costs | 5–8 days | Planned |

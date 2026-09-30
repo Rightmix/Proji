@@ -9,6 +9,7 @@ const routes = [
   '/menu/tandoori-paneer-red-rice-kanji',
   '/menu/does-not-exist',
   '/build',
+  '/build?base=brown-rice-kanji&protein=kerala-grilled-fish&flavours=kerala-coconut-sauce,spicy-chilli-oil&toppings=roasted-peanuts,crispy-shallots,fresh-herbs',
   '/login',
   '/unauthorized',
   '/no-such-page',
@@ -38,4 +39,27 @@ test('A-01 axe: mobile menu open state', async ({ page }) => {
   expect(
     results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'),
   ).toEqual([])
+})
+
+test('A-01 axe: builder dialogs and limit state', async ({ page }) => {
+  await page.goto(
+    '/build?base=brown-rice-kanji&protein=kerala-grilled-fish&toppings=roasted-peanuts,crispy-shallots,fresh-herbs',
+  )
+  await page.getByRole('tab', { name: /topping/i }).click()
+  const check = async () => {
+    const r = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+      .analyze()
+    expect(
+      r.violations
+        .filter((v) => v.impact === 'serious' || v.impact === 'critical')
+        .map((v) => v.id),
+    ).toEqual([])
+  }
+  await check()
+  await page.getByRole('button', { name: 'View Nutrition' }).click()
+  await check()
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: /add to cart/i }).click()
+  await check()
 })

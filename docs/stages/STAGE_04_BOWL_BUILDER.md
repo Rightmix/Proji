@@ -1,9 +1,9 @@
 # Stage 04 — Animated Build Your Bowl
 
-**Status:** Planned; requirements and implementation approach approved for planning. **Application implementation:** Not authorized or verified. **Estimate:** 16–30 sequential working days for the expanded visual milestone (provisional, subject to repository and asset audit).
+**Status:** In review, as a draft PR on `stage-4/bowl-builder` (implementation authorized 2026-09-30). Evidence: [STAGE_4_REPORT.md](../../STAGE_4_REPORT.md); tests: [STAGE_04_ACCEPTANCE_TESTS.md](STAGE_04_ACCEPTANCE_TESTS.md); assets: [STAGE_04_ASSETS.md](STAGE_04_ASSETS.md). **Earlier status:** planned. **Estimate:** 16–30 sequential working days for the expanded visual milestone (provisional, subject to repository and asset audit).
 
 ## Approved product and visual direction
-The previously approved four-screen mockup is the master visual reference; obtain the actual mockup before implementation. Do not replace the visual builder with a standard form. Mobile-first white and warm-grey UI, natural green selection states, deep-green actions, matte-black overhead bowl, realistic food imagery. Preserve PROJI brand tokens unless the approved mockup specifies a reviewed variant.
+The four-screen mockup is **confirmed (2026-09-30) as the approved master**, stored at [`docs/design/approved/four-screen-customize-master.png`](../design/approved/four-screen-customize-master.png). Do not replace the visual builder with a standard form. Mobile-first white and warm-grey UI, natural green selection states, deep-green actions, matte-black overhead bowl, realistic food imagery. Preserve PROJI brand tokens unless the approved mockup specifies a reviewed variant.
 
 **Approved 2026-09-27 decisions:** Hybrid professional food photography plus AI-assisted asset production; sticky/fixed-near-top bowl preview while ingredient choices scroll below; first milestone covers animations for **all 15 proposed ingredients** with clearly labelled illustrative nutrition and prices. No production checkout or subscriptions are implied.
 
@@ -72,3 +72,10 @@ Later: validated recipes, real checkout, saved bowls, kitchen and subscription i
 
 ## Dependencies / open questions
 Actual approved four-screen mockup must be supplied; inspect real repository code before locking filenames; determine ingredient photoshoot/AI review workflow and animation library after architecture audit. Original Stage 4 estimate of 4–7 days is superseded for this expanded visual milestone. Do not implement code without a separate authorization.
+
+## Implementation notes (2026-09-30)
+- **Route:** `/build` is a full-screen layout loaded as a lazy chunk (`src/pages/CustomizePage.tsx`). It accepts share params (`?base=&protein=&flavours=&toppings=`) and Stage 3 presets (`?bowl=<catalog slug>`).
+- **State:** one reducer (`selectionRules.ts`) with fixed flavour and topping slots. `useBowlBuilder` derives the layers, nutrition, price and the `BowlConfiguration` boundary from that single selection.
+- **Renderer:** `BowlRenderer` and `AnimatedIngredientLayer` key each layer by category, slot and ingredient. The enter animation starts after the image decodes, and there is a timeout safety net. Failed loads show a fallback shape, and reduced motion settles layers instantly.
+- **Animations:** CSS keyframes; no animation library. Base is a centre reveal (600 ms), protein a slide-and-settle (500 ms), flavour a conic-mask drizzle sweep (700 ms), topping a drop-scatter-settle (500 ms).
+- **Fixture data:** illustrative values live only in `illustrativeIngredients.ts` and are tagged `illustrative-fixture`. The ingredient descriptions were reworded to remove the master's health claims. Add to Cart is a local no-op boundary (`cartBoundary.ts`).

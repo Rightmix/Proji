@@ -1,0 +1,125 @@
+/* Stage 4 builder: sticky layout, bowl sizing and ingredient transitions. */
+@property --sweep {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 360deg;
+}
+
+.builder-bowl {
+  /* Shrinks on short screens so choices stay reachable; never below 120px. */
+  width: clamp(120px, min(52vw, 23dvh), 240px);
+}
+@media (max-height: 620px) {
+  .builder-bowl {
+    width: clamp(110px, 22dvh, 180px);
+  }
+}
+@media (min-width: 1024px) {
+  .builder-bowl {
+    width: min(420px, 38vw, 52dvh);
+  }
+}
+
+.bowl-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.bowl-layer > img,
+.bowl-layer > .layer-fallback {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bowl-layer[data-phase='entering'] {
+  animation-duration: var(--layer-duration, 500ms);
+  animation-timing-function: var(--layer-easing, ease-out);
+  animation-fill-mode: both;
+}
+.bowl-layer[data-phase='loading'] > img {
+  opacity: 0;
+}
+
+/* Base: reveal from the centre, like kanji filling the bowl. */
+.bowl-layer[data-category='base'][data-phase='entering'] {
+  animation-name: layer-reveal;
+}
+@keyframes layer-reveal {
+  from {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0.4;
+  }
+  to {
+    clip-path: circle(75% at 50% 50%);
+    opacity: 1;
+  }
+}
+
+/* Protein: slides in from above-right and settles. */
+.bowl-layer[data-category='protein'][data-phase='entering'] > img {
+  animation: layer-place var(--layer-duration) var(--layer-easing) both;
+}
+@keyframes layer-place {
+  from {
+    transform: translate(10%, -16%) scale(1.08) rotate(-5deg);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* Flavour: drizzle sweeps along its rim arc. */
+.bowl-layer[data-category='flavour'][data-phase='entering'] {
+  animation-name: layer-drizzle;
+  -webkit-mask-image: conic-gradient(from 200deg, #000 var(--sweep), transparent var(--sweep));
+  mask-image: conic-gradient(from 200deg, #000 var(--sweep), transparent var(--sweep));
+}
+@keyframes layer-drizzle {
+  from {
+    --sweep: 0deg;
+  }
+  to {
+    --sweep: 360deg;
+  }
+}
+
+/* Toppings: drop, scatter and settle. */
+.bowl-layer[data-category='topping'][data-phase='entering'] > img {
+  animation: layer-scatter var(--layer-duration) var(--layer-easing) both;
+}
+@keyframes layer-scatter {
+  from {
+    transform: translateY(-7%) scale(1.14);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.bowl-empty-float {
+  animation: bowl-float 3.2s ease-in-out infinite;
+}
+@keyframes bowl-float {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Slow network: show a soft tint of the base while its image loads. */
+.bowl-layer[data-phase='loading'][data-category='base'] {
+  border-radius: 50%;
+  background: var(--layer-placeholder);
+  opacity: 0.55;
+}
+
+dialog.builder-dialog::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}

@@ -1,13 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Placeholder } from '../components/Placeholder'
-import { BowlSurface } from '../components/ui/BowlSurface'
 
-export const Build = () => (
-  <Placeholder title="Build your bowl">
-    <p>The animated bowl builder arrives in Stage 4.</p>
-    <BowlSurface emptyLabel="Your bowl builds here" className="mx-auto mt-8 w-56" />
-  </Placeholder>
-)
 export const Admin = () => (
   <Placeholder title="Admin & R&D">Ingredient and recipe management arrive in Stage 7.</Placeholder>
 )
