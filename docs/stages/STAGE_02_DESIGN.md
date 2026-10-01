@@ -1,6 +1,6 @@
 # Stage 02 — Design system
 
-**Status:** In review (2026-09-30). Implementation on `stage-2/design-system`; see STAGE_2_REPORT.md, STAGE_02_ACCEPTANCE_TESTS.md and docs/DESIGN_SYSTEM.md. See PROJECT_ROADMAP.md for provisional estimate.
+**Status:** Complete. Merged to `main` (`4625119`) and reported production-verified by the owner (2026-10-01); the visual direction is still provisional. Evidence and history are in the stage report.
 
 ## Objective and scope
 Brand tokens, typography, reusable UI components, responsive navigation, homepage and image integration.

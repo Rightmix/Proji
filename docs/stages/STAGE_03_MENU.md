@@ -1,6 +1,6 @@
 # Stage 03 — Menu and catalog
 
-**Status:** In review (2026-09-30). Draft PR on `stage-3/menu-catalog`. Evidence: [STAGE_3_REPORT.md](../../STAGE_3_REPORT.md); tests: [STAGE_03_ACCEPTANCE_TESTS.md](STAGE_03_ACCEPTANCE_TESTS.md).
+**Status:** Complete. Merged to `main` (`1edba53`) and reported production-verified by the owner (2026-10-01). Evidence and history are in the stage report.
 
 ## Objective and scope
 Signature congee bowl catalog, validated descriptions, images, filters and availability.
