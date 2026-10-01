@@ -16,7 +16,7 @@ export function RequireRole({ allow, children }: { allow: readonly Role[]; child
     )
   }
   if (status === 'signed-out') {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
   }
   if (!hasAnyRole(roles, allow)) {
     return <Navigate to="/unauthorized" replace />

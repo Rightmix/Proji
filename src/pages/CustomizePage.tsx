@@ -1,4 +1,9 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
+import { AuthContext } from '../auth/context'
+import { SaveBowlForm } from '../components/builder/SaveBowlDialog'
+import { useAccountRepository } from '../features/account/accountContext'
+import { UUID_RE } from '../features/account/validation'
+import { decodeConfiguration, describeMissing } from '../features/builder/savedBowlCodec'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import '../styles/bowl-builder.css'
 import { SkipLink } from '../components/Layouts'
@@ -43,7 +48,9 @@ export default function CustomizePage({
     initial,
   )
   const reducedMotion = useReducedMotion()
-  const [dialog, setDialog] = useState<'nutrition' | 'cart' | null>(null)
+  const [dialog, setDialog] = useState<'nutrition' | 'cart' | 'save' | null>(null)
+  const auth = useContext(AuthContext)
+  const accounts = useAccountRepository()
   const [cartResult, setCartResult] = useState<PrototypeCartResult | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [presetNote, setPresetNote] = useState<string | null>(null)
@@ -72,6 +79,46 @@ export default function CustomizePage({
       active = false
     }
   }, [bowlSlug, catalog, index, initial, dispatch])
+
+  // Stage 5: /build?saved=<id> restores a saved bowl through the canonical codec.
+  const savedId = params.get('saved')
+  const authStatus = auth?.status ?? 'signed-out'
+  const savedLinkNote =
+    !savedId || initial
+      ? null
+      : !UUID_RE.test(savedId)
+        ? 'This saved bowl link is not valid.'
+        : authStatus !== 'loading' && (authStatus !== 'signed-in' || !accounts)
+          ? 'Sign in to open your saved bowl.'
+          : null
+  useEffect(() => {
+    if (!savedId || initial || !UUID_RE.test(savedId) || authStatus !== 'signed-in' || !accounts)
+      return
+    let active = true
+    accounts.getSavedBowl(savedId).then(
+      (rec) => {
+        if (!active) return
+        if (!rec) return setPresetNote('We couldn’t find that saved bowl.')
+        const r = decodeConfiguration(rec.configuration, index)
+        if (r.status === 'invalid')
+          return setPresetNote(`“${rec.name}” can’t be opened because its saved data is not valid.`)
+        dispatch({
+          type: 'load',
+          selection: r.selection,
+          step: r.status === 'ok' ? 'topping' : 'base',
+        })
+        setPresetNote(
+          r.status === 'ok'
+            ? `Opened “${rec.name}”.`
+            : `Opened “${rec.name}”. No longer available: ${r.missing.map((m) => describeMissing(m, index)).join(', ')}. Please choose replacements.`,
+        )
+      },
+      () => active && setPresetNote('We couldn’t open that saved bowl. Please try again.'),
+    )
+    return () => {
+      active = false
+    }
+  }, [savedId, initial, authStatus, accounts, index, dispatch])
 
   useEffect(() => {
     preloadImages(assetsToPreload(step, index))
@@ -129,12 +176,12 @@ export default function CustomizePage({
           </section>
 
           <div className="flex min-h-[60dvh] flex-col px-4 lg:min-h-dvh lg:pt-8">
-            {presetNote && (
+            {(presetNote ?? savedLinkNote) && (
               <p
                 role="status"
                 className="mb-3 rounded-md border border-line bg-surface px-3 py-2 text-sm"
               >
-                {presetNote}
+                {presetNote ?? savedLinkNote}
               </p>
             )}
             <CategoryNavigation
@@ -162,6 +209,7 @@ export default function CustomizePage({
                 onNext={() => dispatch({ type: 'next' })}
                 onAddToCart={onAddToCart}
                 onViewNutrition={() => setDialog('nutrition')}
+                onSave={configuration ? () => setDialog('save') : undefined}
               />
             </StickyFooter>
           </div>
@@ -184,6 +232,16 @@ export default function CustomizePage({
         title="Nutrition"
       >
         <NutritionDetails items={items} totals={nutrition} price={price} />
+      </Dialog>
+      <Dialog id="save" open={dialog === 'save'} onClose={() => setDialog(null)} title="Save bowl">
+        {configuration && (
+          <SaveBowlForm
+            configuration={configuration}
+            signedIn={authStatus === 'signed-in'}
+            shareSearch={toSearchParams(selection).toString()}
+            onClose={() => setDialog(null)}
+          />
+        )}
       </Dialog>
       <Dialog id="cart" open={dialog === 'cart'} onClose={() => setDialog(null)} title="Your bowl">
         {cartResult && (

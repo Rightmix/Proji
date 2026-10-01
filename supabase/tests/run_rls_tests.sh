@@ -12,3 +12,4 @@ PSQL=(psql -h "$DATA" -p "$PORT" -U postgres -v ON_ERROR_STOP=1 -q -X)
 "${PSQL[@]}" -d proji_rls_test -f tests/auth_shim.sql
 for m in migrations/*.sql; do echo "applying $m"; "${PSQL[@]}" -d proji_rls_test -f "$m"; done
 "${PSQL[@]}" -d proji_rls_test -f tests/rls_test.sql
+"${PSQL[@]}" -d proji_rls_test -f tests/rls_stage5_test.sql

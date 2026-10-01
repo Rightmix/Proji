@@ -1,14 +1,14 @@
 # PROJI — 12-Stage Development Roadmap
 
-**Status date:** 2026-09-27. **Stage 1:** In progress (repository created; technical implementation unverified). Estimates are planning ranges, not commitments.
+**Status date:** 2026-10-01. Stages 1–4 are merged to `main`, and the owner has reported them production-verified. Stage 5 is in review as a draft PR. Estimates are planning ranges, not commitments.
 
 | Stage | Scope | Estimate | Status |
 |---|---|---|---|
-| 01 | Project foundation: app, Supabase, roles, testing, deployment | 1–2 days | In progress |
-| 02 | Branding and responsive design system | 2–4 days | In review |
-| 03 | Signature bowl menu and catalog | 2–3 days | In review (draft PR) |
-| 04 | Four-step Build Your Bowl and live estimates | 16–30 days (visual milestone) | In review (draft PR) |
-| 05 | Customer accounts, addresses, saved bowls | 2–4 days | Planned |
+| 01 | Project foundation: app, Supabase, roles, testing, deployment | 1–2 days | Complete: merged (PR #25, `5ab18d5`); hosted acceptance recorded in STAGE_1_REPORT.md |
+| 02 | Branding and responsive design system | 2–4 days | Complete: merged (`4625119`); production verified per owner. Visual direction still provisional |
+| 03 | Signature bowl menu and catalog | 2–3 days | Complete: merged (`1edba53`); production verified per owner. Catalog shows no data until Stage 7 |
+| 04 | Four-step Build Your Bowl and live estimates | 16–30 days (visual milestone) | Complete as a prototype milestone: merged (PR #28, `6241487`); production verified per owner. Prototype assets and illustrative values remain |
+| 05 | Customer accounts, addresses, saved bowls | 2–4 days | In review (draft PR on `stage-5/customer-accounts`) |
 | 06 | Cart, checkout, delivery scheduling, payments | 4–6 days | Planned |
 | 07 | Admin/R&D: ingredients, standardized recipes, macros, costs | 5–8 days | Planned |
 | 08 | Kitchen display, production and inventory | 4–7 days | Planned |
@@ -24,4 +24,4 @@ Stages 1–8 establish the ordering and operations MVP; validate recipe data and
 Each stage has a plan in docs/stages and a corresponding GitHub Issue. The Issue is the task tracker; this roadmap is the canonical cross-stage status summary. Changes must update affected requirements, issues, decisions and changelog.
 
 ## Stage 4 scope expansion — approved planning update (2026-09-27)
-Stage 4 is now a visual animated bowl configurator, not a conventional ordering form. Approved first milestone: all 15 proposed ingredient animations, hybrid photography/AI-assisted transparent assets, fixed-near-top mobile bowl preview, illustrative nutrition and prices. Detailed scope: [Stage 4 plan](docs/stages/STAGE_04_BOWL_BUILDER.md), [Issue #4](https://github.com/Rightmix/Proji/issues/4). Expanded visual milestone estimate: **16–30 sequential working days, provisional**, replacing the previous Stage 4 4–7-day estimate. Stage 4 remains PLANNED; Stage 1 remains IN PROGRESS. Later integrations: Stage 2 design fidelity, Stage 5 saved bowls, Stage 6 cart, Stage 7 validated recipes, Stage 8 kitchen, Stage 9 subscriptions, Stage 11 testing. No application implementation authorized by this update.
+Stage 4 is now a visual animated bowl configurator, not a conventional ordering form. Approved first milestone: all 15 proposed ingredient animations, hybrid photography/AI-assisted transparent assets, fixed-near-top mobile bowl preview, illustrative nutrition and prices. Detailed scope: [Stage 4 plan](docs/stages/STAGE_04_BOWL_BUILDER.md), [Issue #4](https://github.com/Rightmix/Proji/issues/4). Expanded visual milestone estimate: **16–30 sequential working days, provisional**, replacing the previous Stage 4 4–7-day estimate. (These statuses date from 2026-09-27 and were superseded by the table above on 2026-10-01.) Later integrations: Stage 2 design fidelity, Stage 5 saved bowls, Stage 6 cart, Stage 7 validated recipes, Stage 8 kitchen, Stage 9 subscriptions, Stage 11 testing. No application implementation authorized by this update.

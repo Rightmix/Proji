@@ -1,6 +1,6 @@
 # Stage 01 — Project Foundation
 
-**Status:** In progress. **Estimate:** 1–2 days, provisional.
+**Status:** Complete. Merged to `main` (PR #25); hosted acceptance is recorded in STAGE_1_REPORT.md. Evidence and history are in the stage report.
 
 ## Objective
 Establish a deployable, tested, secure technical foundation; do not implement the full menu or checkout yet.

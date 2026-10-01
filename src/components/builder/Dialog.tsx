@@ -19,7 +19,11 @@ export function Dialog({
   useEffect(() => {
     const d = ref.current
     if (!d) return
-    if (open && !d.open) d.showModal()
+    if (open && !d.open) {
+      d.showModal()
+      // Prefer an explicitly marked initial focus target (e.g. Cancel on destructive dialogs).
+      d.querySelector<HTMLElement>('[data-autofocus]')?.focus()
+    }
     if (!open && d.open) d.close()
   }, [open])
   return (

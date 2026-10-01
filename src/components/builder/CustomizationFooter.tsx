@@ -10,6 +10,7 @@ export function CustomizationFooter({
   onNext,
   onAddToCart,
   onViewNutrition,
+  onSave,
 }: {
   isLast: boolean
   canNext: boolean
@@ -18,6 +19,8 @@ export function CustomizationFooter({
   onNext: () => void
   onAddToCart: () => void
   onViewNutrition: () => void
+  /** Stage 5: shown once the bowl is complete. */
+  onSave?: () => void
 }) {
   return (
     <div className="flex flex-col items-stretch gap-1">
@@ -30,13 +33,24 @@ export function CustomizationFooter({
           Next <Icon name="arrow-right" className="size-5" />
         </Button>
       )}
-      <button
-        type="button"
-        onClick={onViewNutrition}
-        className="min-h-touch text-sm font-semibold text-ink hover:underline"
-      >
-        View Nutrition
-      </button>
+      <div className="flex justify-center gap-6">
+        <button
+          type="button"
+          onClick={onViewNutrition}
+          className="min-h-touch text-sm font-semibold text-ink hover:underline"
+        >
+          View Nutrition
+        </button>
+        {onSave && (
+          <button
+            type="button"
+            onClick={onSave}
+            className="min-h-touch text-sm font-semibold text-action-600 hover:underline"
+          >
+            Save bowl
+          </button>
+        )}
+      </div>
     </div>
   )
 }

@@ -30,3 +30,8 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 - Saved the approved four-screen master to `docs/design/approved/` and removed the downscaled candidate.
 - The `/build` animated builder: sticky layered bowl, BASE/PROTEIN/FLAVOUR/TOPPING steps, selection limits, live illustrative macros and price, View Nutrition, share link, Stage 3 presets, and a prototype Add to Cart.
 - 30 procedural prototype assets (about 430 KB) with a generator script and manifest. No database changes.
+
+## 2026-10-01: Stage 5 customer accounts (draft, in review)
+- New account pages for profile, addresses (default, labels), preferences, saved bowls (save from `/build`, reopen, rename, delete) and an empty order-history boundary.
+- Migration `20261001000001_stage5_customer_accounts.sql` adds owner-only RLS, column grants, constraints and limits; a Stage 5 RLS suite checks it.
+- Roadmap: Stage 1–4 statuses corrected to reflect what is merged on `main`.

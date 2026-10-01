@@ -1,6 +1,6 @@
 # Stage 04 — Animated Build Your Bowl
 
-**Status:** In review, as a draft PR on `stage-4/bowl-builder` (implementation authorized 2026-09-30). Evidence: [STAGE_4_REPORT.md](../../STAGE_4_REPORT.md); tests: [STAGE_04_ACCEPTANCE_TESTS.md](STAGE_04_ACCEPTANCE_TESTS.md); assets: [STAGE_04_ASSETS.md](STAGE_04_ASSETS.md). **Earlier status:** planned. **Estimate:** 16–30 sequential working days for the expanded visual milestone (provisional, subject to repository and asset audit).
+**Status:** Complete as a prototype milestone. Merged to `main` (PR #28) and reported production-verified by the owner (2026-10-01). Prototype assets and illustrative values remain (D-018). Evidence: [STAGE_4_REPORT.md](../../STAGE_4_REPORT.md); tests: [STAGE_04_ACCEPTANCE_TESTS.md](STAGE_04_ACCEPTANCE_TESTS.md); assets: [STAGE_04_ASSETS.md](STAGE_04_ASSETS.md). **Earlier status:** planned. **Estimate:** 16–30 sequential working days for the expanded visual milestone (provisional, subject to repository and asset audit).
 
 ## Approved product and visual direction
 The four-screen mockup is **confirmed (2026-09-30) as the approved master**, stored at [`docs/design/approved/four-screen-customize-master.png`](../design/approved/four-screen-customize-master.png). Do not replace the visual builder with a standard form. Mobile-first white and warm-grey UI, natural green selection states, deep-green actions, matte-black overhead bowl, realistic food imagery. Preserve PROJI brand tokens unless the approved mockup specifies a reviewed variant.

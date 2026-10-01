@@ -4,7 +4,7 @@
 | Area | Routes | Access |
 |---|---|---|
 | Customer | `/`, `/menu`, `/build`, `/login`, `/unauthorized`, 404 | Public |
-| Customer | `/account` | Any signed-in user |
+| Customer | `/account/*` (overview, profile, addresses, preferences, bowls, orders) | Any signed-in user; data is limited to their own rows by RLS |
 | Admin / R&D | `/admin/*` | `admin`, `rd` |
 | Kitchen | `/kitchen/*` | `kitchen`, `admin` |
 
@@ -24,3 +24,6 @@ Code lives in `src/features/catalog`. `/menu` and `/menu/:slug` read through a `
 
 ## Bowl builder (Stage 4)
 Code lives in `src/features/builder` (domain: rules, calculations, layers, configuration, preloader) and `src/components/builder` (UI). Canonical state comes from one reducer (D-016), and everything else is derived from it. Fixture data is isolated and marked illustrative. The hand-off to later stages is `BowlConfiguration` (D-019), and Add to Cart goes through `cartBoundary.ts`, which is a no-op in Stage 4.
+
+## Customer accounts (Stage 5)
+Code lives in `src/features/account` (types, validation, repositories) and `src/pages/account`. Pages read through `AccountContext`, which holds the Supabase repository or `null` when Supabase is not configured. Saved bowls connect to the builder through `savedBowlCodec` (D-022). Order history reads through `OrderHistoryContext`, which reports "not available" until Stage 6. See docs/SECURITY.md for the data-protection model.
