@@ -9,6 +9,13 @@ const routes = [
   '/menu/tandoori-paneer-red-rice-kanji',
   '/menu/does-not-exist',
   '/build',
+  '/categories/all',
+  '/categories/high-protein',
+  '/menu/grilled-fish-millet-bowl',
+  '/cart',
+  '/checkout',
+  '/checkout/confirmation',
+  '/favourites',
   '/build?base=brown-rice-kanji&protein=kerala-grilled-fish&flavours=kerala-coconut-sauce,spicy-chilli-oil&toppings=roasted-peanuts,crispy-shallots,fresh-herbs',
   '/login',
   '/unauthorized',
@@ -31,10 +38,11 @@ for (const path of routes) {
   })
 }
 
-test('A-01 axe: mobile menu open state', async ({ page }) => {
+test('A-01 axe: chat dialog open state (Stage 5.5 replaces the mobile menu)', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 700 })
   await page.goto('/')
-  await page.getByRole('button', { name: 'Open menu' }).click()
+  await page.getByRole('button', { name: /chat with proji support/i }).click()
+  await expect(page.getByRole('dialog', { name: 'Chat with PROJI' })).toBeVisible()
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
   expect(
     results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical'),

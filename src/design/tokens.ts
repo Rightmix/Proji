@@ -21,9 +21,9 @@ export const color = {
   'select-500': '#599a3d', // selected border / check fill (non-text)
   'select-700': '#2f6d33', // text on selected surfaces
   // Deep green — primary actions
-  'action-600': '#2e6b34',
-  'action-700': '#245a2a',
-  'action-800': '#1c4821',
+  'action-600': '#187a40',
+  'action-700': '#16703b',
+  'action-800': '#13612f',
   // Brand accents (from PROJECT_REQUIREMENTS)
   lime: '#70c043',
   beige: '#d9c7a1',
@@ -33,7 +33,11 @@ export const color = {
   'bowl-700': '#262626',
   // Feedback
   danger: '#b3261e',
-  focus: '#2e6b34',
+  focus: '#187a40',
+  // Macro indicator dots (non-text; always paired with a text label)
+  'macro-protein': '#5b6ee1',
+  'macro-carbs': '#e39a2d',
+  'macro-fat': '#3a9ad9',
 } as const
 
 export const radius = {

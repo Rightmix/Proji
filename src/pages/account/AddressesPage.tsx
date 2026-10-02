@@ -37,10 +37,17 @@ export default function AddressesPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <PageTitle>Addresses</PageTitle>
-        {repo && <ButtonLink to="/account/addresses/new">Add address</ButtonLink>}
-      </div>
+      <PageTitle
+        right={
+          repo && (
+            <ButtonLink to="/account/addresses/new" variant="ghost" className="px-2">
+              Add address
+            </ButtonLink>
+          )
+        }
+      >
+        Addresses
+      </PageTitle>
       {message && (
         <p role="status" className="text-select-700">
           {message}

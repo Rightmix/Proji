@@ -35,3 +35,18 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 - New account pages for profile, addresses (default, labels), preferences, saved bowls (save from `/build`, reopen, rename, delete) and an empty order-history boundary.
 - Migration `20261001000001_stage5_customer_accounts.sql` adds owner-only RLS, column grants, constraints and limits; a Stage 5 RLS suite checks it.
 - Roadmap: Stage 1–4 statuses corrected to reflect what is merged on `main`.
+
+## 2026-10-02: Stage 5.5 customer UI redesign (draft, in review)
+- Mobile app shell (bottom nav, chat button, back headers); new Home, Category, Meal detail, BYO step-rail layout with 3-column tiles, prototype cart, checkout boundary and confirmation preview, and the account hub.
+- Illustrative meal estimates (D-024), device-local cart and favourites (D-025), approved layout and green (D-026). No database changes.
+- Vitest 306/306 and Playwright 189 pass (5 skipped). Visual comparison is in `docs/design/stage-5.5/`.
+
+## 2026-10-02 — Stage 5.5 BYO interaction refinement
+- Reworked the BYO layout:
+  - single bowl with nutrition directly under it
+  - left step rail and ingredient panel starting below them, with a sliding active state, completed-step checks and a direction-aware panel transition
+  - compact tiles with full macros and price (3 per row, 2 below a 17rem panel)
+  - sticky ₹/kcal/P/C/F summary
+- Reason: owner-supplied interaction reference (behaviour only; PROJI design retained).
+- Affected: Stage 5.5 / PR #30. No business-rule, nutrition, Supabase or migration changes.
+- Verification: Vitest 309/309, Playwright 199/199, lint, prettier, tsc, build and check:bundle pass; builder visual baselines regenerated.

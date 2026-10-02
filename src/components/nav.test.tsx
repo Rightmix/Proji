@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
+import { cartStore } from '../features/cart/cartStore'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { AuthContext, type AuthState } from '../auth/context'
@@ -24,35 +25,56 @@ function renderAt(path: string, auth: Partial<AuthState> = {}) {
   return router
 }
 
-describe('N-01 mobile menu', () => {
-  it('toggles aria-expanded, closes on navigation and Escape', async () => {
+// Stage 5.5: the mobile hamburger menu is replaced by the approved bottom navigation.
+describe('N-01 bottom navigation', () => {
+  beforeEach(() => cartStore.set([]))
+  it('shows Home / Build / Cart / Account with icons+labels, marks the active tab and navigates', async () => {
     const user = userEvent.setup()
     const router = renderAt('/')
-    const toggle = await screen.findByRole('button', { name: 'Open menu' })
-    expect(toggle).toHaveAttribute('aria-expanded', 'false')
-    const panel = document.getElementById('mobile-nav')!
-    expect(panel).not.toBeVisible()
-    await user.click(toggle)
-    expect(screen.getByRole('button', { name: 'Close menu' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
+    const nav = await screen.findByRole('navigation', { name: 'Primary' })
+    const links = within(nav).getAllByRole('link')
+    expect(links.map((l) => l.textContent)).toEqual(['Home', 'Build', 'Cart', 'Account'])
+    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page')
+    expect(links.every((l) => l.querySelector('svg'))).toBe(true)
+    await user.click(within(nav).getByRole('link', { name: /^Cart/ }))
+    await vi.waitFor(() => expect(router.state.location.pathname).toBe('/cart')) // lazy route
+    expect(
+      within(screen.getByRole('navigation', { name: 'Primary' })).getByRole('link', {
+        name: /^Cart/,
+      }),
+    ).toHaveAttribute('aria-current', 'page')
+  })
+  it('cart badge reflects item count', async () => {
+    cartStore.set([{ id: 'x', name: 'Bowl', mealSlug: null, configuration: {}, quantity: 3 }])
+    renderAt('/')
+    const nav = await screen.findByRole('navigation', { name: 'Primary' })
+    expect(within(nav).getByRole('link', { name: /cart, 3 items/i })).toBeInTheDocument()
+  })
+  it('floating chat button is present and opens an honest support dialog', async () => {
+    renderAt('/')
+    await userEvent.click(await screen.findByRole('button', { name: /chat with proji support/i }))
+    expect(screen.getByRole('dialog', { name: 'Chat with PROJI' })).toHaveTextContent(
+      /opens together with ordering/i,
     )
-    expect(panel).toBeVisible()
-    await user.keyboard('{Escape}')
-    expect(panel).not.toBeVisible()
-    await user.click(screen.getByRole('button', { name: 'Open menu' }))
-    const menuLinks = screen.getAllByRole('link', { name: 'Menu' })
-    await user.click(menuLinks[menuLinks.length - 1])
-    expect(router.state.location.pathname).toBe('/menu')
-    expect(panel).not.toBeVisible()
+  })
+  it('full-screen meal detail hides the bottom nav', async () => {
+    renderAt('/menu/pepper-chicken-brown-rice-bowl')
+    await screen.findByRole('heading', { level: 1, name: /pepper chicken/i })
+    expect(screen.queryByRole('navigation', { name: 'Primary' })).toBeNull()
   })
 })
 
 describe('N-02 auth-aware navigation (Stage 1 behaviour)', () => {
-  it('signed out shows Sign in, not Account', async () => {
+  it('signed out: header shows Sign in, not Account; bottom nav Account still reachable', async () => {
     renderAt('/')
-    expect((await screen.findAllByRole('link', { name: 'Sign in' })).length).toBeGreaterThan(0)
-    expect(screen.queryByRole('link', { name: 'Account' })).toBeNull()
+    const header = await screen.findByRole('navigation', { name: 'Main' })
+    expect(within(header).getByRole('link', { name: 'Sign in' })).toBeInTheDocument()
+    expect(within(header).queryByRole('link', { name: 'Account' })).toBeNull()
+    expect(
+      within(screen.getByRole('navigation', { name: 'Primary' })).getByRole('link', {
+        name: 'Account',
+      }),
+    ).toBeInTheDocument()
   })
   it('signed in shows Account and Sign out, which calls signOut', async () => {
     const signOut = vi.fn(async () => {})
@@ -62,9 +84,10 @@ describe('N-02 auth-aware navigation (Stage 1 behaviour)', () => {
       user: { id: 'u' } as AuthState['user'],
       signOut,
     })
-    expect((await screen.findAllByRole('link', { name: 'Account' })).length).toBeGreaterThan(0)
-    await userEvent.click(screen.getAllByRole('button', { name: 'Sign out' })[0])
+    const header = await screen.findByRole('navigation', { name: 'Main' })
+    expect(within(header).getByRole('link', { name: 'Account' })).toBeInTheDocument()
+    await userEvent.click(within(header).getByRole('button', { name: 'Sign out' }))
     expect(signOut).toHaveBeenCalled()
-    expect(screen.queryByRole('link', { name: 'Sign in' })).toBeNull()
+    expect(within(header).queryByRole('link', { name: 'Sign in' })).toBeNull()
   })
 })

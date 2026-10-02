@@ -32,9 +32,9 @@ const signedIn = (roles: Role[]): Partial<AuthState> => ({
 
 describe('public routes', () => {
   it.each([
-    ['/', /build your bowl\. build your body\./i],
+    ['/', /your bowl\. your rules\./i], // Stage 5.5 approved hero
     ['/menu', /^menu$/i],
-    ['/build', /^customize$/i], // Stage 4: approved master top bar title
+    ['/build', /^build your own$/i], // Stage 5.5 approved title
     ['/login', /sign in/i],
     ['/unauthorized', /access denied/i],
     ['/does-not-exist', /page not found/i],

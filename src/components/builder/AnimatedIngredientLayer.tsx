@@ -51,7 +51,16 @@ export function AnimatedIngredientLayer({
           alt=""
           draggable={false}
           decoding="async"
-          onLoad={() => setPhase(reducedMotion ? 'settled' : 'entering')}
+          ref={(img) => {
+            // Cached images can finish before React attaches onLoad; catch that case.
+            if (img?.complete && img.naturalWidth > 0)
+              queueMicrotask(() =>
+                setPhase((p) => (p === 'loading' ? (reducedMotion ? 'settled' : 'entering') : p)),
+              )
+          }}
+          onLoad={() =>
+            setPhase((p) => (p === 'loading' ? (reducedMotion ? 'settled' : 'entering') : p))
+          }
           onError={() => setPhase('error')}
         />
       )}

@@ -1,3 +1,4 @@
+import '../../styles/bowl-builder.css'
 import { BowlSurface } from '../ui'
 import type { BowlLayer } from '../../features/builder/layerOrdering'
 import { cn } from '../../lib/cn'
@@ -11,19 +12,22 @@ export function BowlRenderer({
   layers,
   reducedMotion,
   className,
+  label,
 }: {
   layers: readonly BowlLayer[]
   reducedMotion: boolean
   className?: string
+  /** Override the accessible name (e.g. meal card previews). */
+  label?: string
 }) {
-  const label = layers.length
+  const computed = layers.length
     ? `Your bowl: ${layers.map((l) => l.name).join(', ')}`
     : 'Your bowl is empty'
   return (
     <div
       role="img"
-      aria-label={label}
-      className={cn('relative', className)}
+      aria-label={label ?? computed}
+      className={cn('relative isolate', className)}
       data-testid="bowl-renderer"
     >
       <BowlSurface

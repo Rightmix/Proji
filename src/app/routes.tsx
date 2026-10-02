@@ -20,7 +20,30 @@ export const routes: RouteObject[] = [
     children: [
       { path: '/', element: <Home /> },
       { path: '/menu', element: <Menu /> },
-      { path: '/menu/:slug', element: <BowlDetail /> },
+      { path: '/menu/:slug', element: <BowlDetail />, handle: { hideNav: true, hideChat: true } },
+      {
+        path: '/categories/:id',
+        lazy: () => import('../pages/CategoryPage').then((m) => ({ Component: m.default })),
+      },
+      {
+        path: '/favourites',
+        lazy: () => import('../pages/FavouritesPage').then((m) => ({ Component: m.default })),
+      },
+      {
+        path: '/cart',
+        lazy: () => import('../pages/order/CartPage').then((m) => ({ Component: m.default })),
+      },
+      {
+        path: '/checkout',
+        handle: { hideNav: true, hideChat: true },
+        lazy: () => import('../pages/order/CheckoutPage').then((m) => ({ Component: m.default })),
+      },
+      {
+        path: '/checkout/confirmation',
+        handle: { hideNav: true },
+        lazy: () =>
+          import('../pages/order/ConfirmationPreviewPage').then((m) => ({ Component: m.default })),
+      },
       { path: '/login', element: <Login /> },
       {
         path: '/account',
