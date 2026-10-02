@@ -51,11 +51,11 @@ export function IngredientSelector({
       className="@container"
     >
       <fieldset className="min-w-0">
-        <legend className="float-left text-lg font-semibold">{COPY[category].legend}</legend>
-        <span className="float-right mt-1 text-sm text-ink-muted" aria-hidden="true">
+        <legend className="float-left text-base font-semibold">{COPY[category].legend}</legend>
+        <span className="float-right mt-0.5 text-xs text-ink-muted" aria-hidden="true">
           {n}/4
         </span>
-        <p className="clear-both text-sm text-ink-muted">
+        <p className="clear-both text-xs text-ink-muted">
           {COPY[category].sub}
           <span className="sr-only">
             {' '}
@@ -63,7 +63,7 @@ export function IngredientSelector({
           </span>
         </p>
         <div
-          className="mt-3 grid grid-cols-3 gap-2 @max-[15.5rem]:grid-cols-2"
+          className="mt-2 grid grid-cols-3 gap-2 @max-[17rem]:grid-cols-2"
           data-testid="ingredient-grid"
         >
           {index.byCategory[category].map((i) => {
@@ -107,16 +107,26 @@ export function IngredientSelector({
                   height={64}
                   loading="lazy"
                   decoding="async"
-                  className="aspect-square w-full max-w-16 rounded-pill"
+                  className="aspect-square w-full max-w-14 rounded-pill"
                 />
                 <span className="line-clamp-2 min-h-[2.4em] text-xs font-semibold leading-tight">
                   {i.name}
                 </span>
-                <span className="text-[0.68rem] leading-tight text-ink-muted">
+                <span className="text-[0.68rem] font-semibold leading-tight">
                   {v.energyKcal} kcal
-                  {(category === 'base' || category === 'protein') && (
-                    <span className="block text-select-700">{v.proteinG}g protein</span>
-                  )}
+                </span>
+                <span
+                  className="text-[0.62rem] leading-tight text-ink-muted tabular-nums"
+                  data-testid="tile-macros"
+                >
+                  <span className="font-semibold text-select-700">
+                    <span aria-hidden="true">P</span>
+                    {v.proteinG}g<span className="sr-only"> protein</span>
+                  </span>{' '}
+                  <span aria-hidden="true">C</span>
+                  {v.carbsG}g<span className="sr-only"> carbs</span>{' '}
+                  <span aria-hidden="true">F</span>
+                  {v.fatG}g<span className="sr-only"> fat</span>
                 </span>
                 <span className="text-[0.7rem] font-semibold leading-tight">
                   {formatAddOn(v.priceMinor)}

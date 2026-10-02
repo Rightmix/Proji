@@ -163,9 +163,13 @@ test.describe('P-09 sticky preview and footer', () => {
       await expect(page.getByRole('button', { name: /add to cart/i })).toBeInViewport()
       await expect(page.getByRole('button', { name: 'View Nutrition' })).toBeInViewport()
       // every ingredient card is reachable on short screens
-      const last = page.getByRole('checkbox', { name: /pickled vegetables/i })
+      // Stage 5.5 refinement: tiles scroll inside the ingredient panel, so reveal the visible
+      // tile (not the 1px sr-only input at its top) and require the WHOLE tile to be visible.
+      const last = page
+        .getByTestId('ingredient-tile')
+        .filter({ has: page.getByRole('checkbox', { name: /pickled vegetables/i }) })
       await last.scrollIntoViewIfNeeded()
-      const box = await page.getByText('Pickled Vegetables', { exact: true }).boundingBox()
+      const box = await last.boundingBox()
       // Stage 5.5: the sticky summary (price + macros) sits above the CTA; use its top edge.
       const footer = await page.getByTestId('live-price').boundingBox()
       const preview = await page.getByTestId('sticky-preview').boundingBox()

@@ -8,11 +8,12 @@
 .builder-bowl {
   /* Shrinks on short screens so choices stay reachable; never below 120px. */
   /* Stage 5.5: large live bowl beside the step rail; still shrinks on short screens. */
-  width: clamp(130px, min(60vw, 25dvh), 250px);
+  /* Refinement: one top-down bowl above nutrition; leaves room for the selection workspace. */
+  width: clamp(120px, min(56vw, 25dvh), 250px);
 }
-@media (max-height: 620px) {
+@media (max-height: 700px) {
   .builder-bowl {
-    width: clamp(110px, 22dvh, 180px);
+    width: clamp(104px, 21dvh, 170px);
   }
 }
 @media (min-width: 1024px) {
@@ -128,4 +129,34 @@ dialog.builder-dialog::backdrop {
 /* Stage 5.5: keep focused/scrolled tiles clear of the sticky preview and summary bar. */
 html:has(.builder-page) {
   scroll-padding-bottom: 12rem;
+}
+
+/* Stage 5.5 refinement: sliding step highlight + panel change (subtle; off for reduced motion). */
+.rail-indicator {
+  transition:
+    transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.step-panel[data-dir='forward'] {
+  animation: panel-in-forward 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.step-panel[data-dir='back'] {
+  animation: panel-in-back 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes panel-in-forward {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes panel-in-back {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rail-indicator {
+    transition: none;
+  }
 }

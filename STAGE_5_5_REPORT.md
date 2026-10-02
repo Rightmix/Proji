@@ -91,3 +91,20 @@ None.
 - "High Protein" (≥ 30 g) and "Low Carb" (≤ 50 g) thresholds, which need regulatory review.
 - Support chat provider.
 - Whether to extend the builder ingredient list to the reference's set (a Stage 7 data decision).
+
+
+## BYO interaction refinement (Lola-style behaviour, PROJI design)
+Only the interaction behaviour was adapted from the reference recording; its branding, colours, content and exact layout were not copied. No business rules, nutrition engine, limits, saved-bowl, draft, Supabase or account code changed. No migrations.
+
+- **Single top-down bowl** at the top. **KCAL / PROTEIN / CARBS / FAT** sit directly under it, live from the Stage 4 calculation.
+- The **selection workspace starts below the nutrition**: a left vertical rail (Base / Protein / Flavour / Toppings) plus a scrolling ingredient panel. The bowl, nutrition and summary stay fixed while the panel scrolls.
+- **Rail behaviour:**
+  - the active highlight slides between steps (320 ms; disabled under reduced motion)
+  - completed steps get a check
+  - completed or available steps can be revisited without losing the bowl
+  - locked steps are announced as "(locked)"
+  - each new step opens at the top of its options
+  - the panel fades and slides in the direction of travel
+- **Compact tiles:** 3 per row, 2 when the panel is narrower than 17rem (360 px and 320 px phones). Each tile shows image, name, kcal, P/C/F, add-on price and selected state.
+- **Sticky summary:** `₹ · kcal · P · C · F` with "Next: <step> →" or "Add to Cart". The header shows Save only for a complete bowl.
+- **Screenshots:** `docs/design/stage-5.5/byo-refinement/` covers 390×844, 393×852, 360×800 and 320×640 in the Base, Protein and Toppings states. Horizontal overflow is 0 at every width.

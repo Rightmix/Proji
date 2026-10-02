@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { AuthContext } from '../auth/context'
 import { SaveBowlForm } from '../components/builder/SaveBowlDialog'
 import { useAccountRepository } from '../features/account/accountContext'
@@ -7,7 +7,6 @@ import { decodeConfiguration, describeMissing } from '../features/builder/savedB
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import '../styles/bowl-builder.css'
 import { SkipLink } from '../components/Layouts'
-import { StickyFooter } from '../components/ui'
 import { BowlRenderer } from '../components/builder/BowlRenderer'
 import { BuilderTopBar } from '../components/builder/BuilderTopBar'
 import { CategoryNavigation } from '../components/builder/CategoryNavigation'
@@ -21,6 +20,7 @@ import { PrototypeNotice } from '../components/builder/PrototypeNotice'
 import { CatalogContext } from '../features/catalog/catalogContext'
 import {
   assetsToPreload,
+  CATEGORIES,
   canAdvance,
   defaultIngredientIndex,
   fromCatalogComponents,
@@ -69,6 +69,18 @@ export default function CustomizePage({
   const [presetNote, setPresetNote] = useState<string | null>(null)
   const { selection, step, notice } = state
   useEffect(() => saveDraft(selection, step), [selection, step])
+  // A new step always opens at the top of its options (the panel scroller outlives the step).
+  const panelRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (panelRef.current) panelRef.current.scrollTop = 0
+  }, [step])
+  // Direction of the last step change, for the subtle panel transition.
+  const [panelStep, setPanelStep] = useState(step)
+  const [panelDir, setPanelDir] = useState<'forward' | 'back' | null>(null)
+  if (panelStep !== step) {
+    setPanelDir(CATEGORIES.indexOf(step) > CATEGORIES.indexOf(panelStep) ? 'forward' : 'back')
+    setPanelStep(step)
+  }
 
   // Stage 3 → Stage 4: /build?bowl=<catalog slug> preloads compatible components.
   const bowlSlug = params.get('bowl')
@@ -168,13 +180,57 @@ export default function CustomizePage({
   }
 
   return (
-    <div className="builder-page min-h-dvh bg-canvas">
+    <div className="builder-page bg-canvas">
       <SkipLink />
-      <main id="main" tabIndex={-1} className="focus:outline-none">
-        <div className="mx-auto max-w-md px-3 pt-safe lg:max-w-6xl lg:px-8">
-          <BuilderTopBar onBack={onBack} onShare={onShare} />
-          <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2 lg:grid-cols-[5rem_minmax(0,1fr)_minmax(0,26rem)] lg:gap-8">
-            <div className="sticky top-2 self-start pt-1 lg:top-8">
+      {/* App-style column: header → top-down bowl → nutrition (fixed), then the selection
+          workspace (left step rail + scrolling ingredient panel), then the summary bar. */}
+      <main
+        id="main"
+        tabIndex={-1}
+        className="mx-auto flex h-dvh w-full max-w-md flex-col focus:outline-none lg:max-w-5xl lg:flex-row lg:gap-10 lg:px-8"
+      >
+        <div className="shrink-0 px-3 pt-safe lg:flex lg:w-1/2 lg:flex-col lg:justify-center">
+          <BuilderTopBar
+            onBack={onBack}
+            onShare={onShare}
+            onSave={configuration ? () => setDialog('save') : undefined}
+          />
+          <section aria-label="Bowl preview" data-testid="sticky-preview" className="pb-2">
+            <div className="flex justify-center py-1 lg:py-6">
+              <BowlRenderer
+                layers={layers}
+                reducedMotion={reducedMotion}
+                className="builder-bowl"
+              />
+            </div>
+            <NutritionSummary totals={nutrition} highlight={selection.base !== null} />
+            <div className="mt-1 flex items-center justify-center gap-2">
+              <PrototypeNotice className="text-[0.65rem]" />
+              <button
+                type="button"
+                onClick={() => setDialog('nutrition')}
+                className="min-h-touch shrink-0 text-xs font-semibold text-action-600 underline"
+              >
+                View Nutrition
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div className="flex min-h-0 flex-1 flex-col lg:py-8">
+          {(presetNote ?? savedLinkNote) && (
+            <p
+              role="status"
+              className="mx-3 mb-2 rounded-md border border-line bg-surface px-3 py-1.5 text-xs"
+            >
+              {presetNote ?? savedLinkNote}
+            </p>
+          )}
+          <div
+            className="grid min-h-0 flex-1 grid-cols-[4rem_minmax(0,1fr)] gap-2 px-3"
+            data-testid="selection-workspace"
+          >
+            <div className="min-h-0 overflow-y-auto pb-2">
               <CategoryNavigation
                 step={step}
                 selection={selection}
@@ -182,33 +238,17 @@ export default function CustomizePage({
                 onSelect={(c) => dispatch({ type: 'goTo', step: c })}
               />
             </div>
-            <section
-              aria-label="Bowl preview"
-              data-testid="sticky-preview"
-              className="sticky top-0 z-20 -mx-1 bg-canvas px-1 pb-2 lg:top-8 lg:col-start-2 lg:row-start-1 lg:self-start"
+            <div
+              ref={panelRef}
+              className="min-h-0 overflow-y-auto overscroll-contain pb-3"
+              data-testid="ingredient-panel"
             >
-              <div className="flex justify-center py-1 lg:py-6">
-                <BowlRenderer
-                  layers={layers}
-                  reducedMotion={reducedMotion}
-                  className="builder-bowl"
-                />
-              </div>
-              <NutritionSummary totals={nutrition} highlight={selection.base !== null} />
-              <PrototypeNotice className="mt-1 text-center" />
-            </section>
-            <div className="col-start-2 flex min-h-[50dvh] flex-col lg:col-start-3 lg:row-start-1 lg:pt-6">
-              {(presetNote ?? savedLinkNote) && (
-                <p
-                  role="status"
-                  className="mb-3 rounded-md border border-line bg-surface px-3 py-2 text-sm"
-                >
-                  {presetNote ?? savedLinkNote}
-                </p>
-              )}
-              <div className="flex-1 pb-4">
+              <div
+                key={step}
+                className="step-panel"
+                data-dir={reducedMotion ? undefined : (panelDir ?? undefined)}
+              >
                 <IngredientSelector
-                  key={step}
                   category={step}
                   selection={selection}
                   index={index}
@@ -218,20 +258,18 @@ export default function CustomizePage({
               </div>
             </div>
           </div>
+          <div className="shrink-0 border-t border-line bg-surface/95 px-3 pb-safe pt-2 pb-3 lg:rounded-xl lg:border">
+            <CustomizationFooter
+              step={step}
+              canNext={canAdvance(selection, step)}
+              canAddToCart={isComplete(selection)}
+              priceMinor={price.amountMinor}
+              nutrition={nutrition}
+              onNext={() => dispatch({ type: 'next' })}
+              onAddToCart={onAddToCart}
+            />
+          </div>
         </div>
-        <StickyFooter className="lg:mx-auto lg:max-w-6xl">
-          <CustomizationFooter
-            step={step}
-            canNext={canAdvance(selection, step)}
-            canAddToCart={isComplete(selection)}
-            priceMinor={price.amountMinor}
-            nutrition={nutrition}
-            onNext={() => dispatch({ type: 'next' })}
-            onAddToCart={onAddToCart}
-            onViewNutrition={() => setDialog('nutrition')}
-            onSave={configuration ? () => setDialog('save') : undefined}
-          />
-        </StickyFooter>
       </main>
 
       {toast && (

@@ -24,3 +24,6 @@
 | UI-18 | Keyboard: rail arrows (both axes), tiles with Space/arrows, dialogs with Escape | stage55 e2e; builder P-03 | Pass |
 | UI-19 | Data safety: every price/kcal labelled illustrative; meals with non-builder components show "Nutrition pending"; validated fields untouched; production catalog still empty | menu.test M-06; meals.test; Home.test empty catalog | Pass |
 | UI-20 | Stage 1–5 regression | all Vitest, Playwright and RLS suites | Pass |
+| UI-21 | BYO refinement: one bowl → nutrition under it → rail and panel below; summary pinned; panel scroll keeps the bowl fixed; no overflow at 390×844, 393×852, 360×800, 320×640 | e2e stage55 "BYO refinement layout"; stage55.test DOM order | Pass |
+| UI-22 | Rail: sliding active highlight, checks on completed steps, revisit without losing the bowl, new step opens at top, (done)/(locked) accessible names | e2e stage55 "active highlight slides"; stage55.test refinement | Pass |
+| UI-23 | Tiles show kcal, P/C/F and price; 3 per row at 390/393, 2 at 360/320; summary shows ₹ · kcal · P · C · F | e2e stage55 BYO grid; stage55.test tile macros | Pass |

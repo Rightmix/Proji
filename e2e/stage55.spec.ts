@@ -48,7 +48,8 @@ test('home and category use 2 meal cards per row on mobile', async ({ page }) =>
 test('BYO grid: 3 tiles per row at 390px, 2 per row at 320px', async ({ page }) => {
   for (const [w, cols] of [
     [390, 3],
-    [360, 3],
+    [393, 3],
+    [360, 2], // refinement: 3 would be cramped once tiles show full macros
     [320, 2],
   ] as const) {
     await page.setViewportSize({ width: w, height: 800 })
@@ -133,5 +134,65 @@ test.describe('reduced motion on new screens', () => {
     const layer = page.getByTestId('meal-grid').locator('[data-testid="bowl-layer"]').first()
     await expect(layer).toHaveAttribute('data-phase', 'settled')
     expect(await layer.evaluate((e) => getComputedStyle(e).animationName)).toBe('none')
+  })
+})
+
+test.describe('BYO refinement layout (Lola-style interaction)', () => {
+  for (const vp of [
+    { width: 390, height: 844 },
+    { width: 393, height: 852 },
+    { width: 360, height: 800 },
+    { width: 320, height: 640 },
+  ]) {
+    test(`${vp.width}x${vp.height}: bowl → nutrition → rail/panel → summary, no overflow`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(vp)
+      await page.goto('/build?base=brown-rice-kanji&protein=kerala-grilled-fish')
+      const bowl = (await page.getByTestId('bowl-renderer').boundingBox())!
+      const strip = (await page.getByRole('group', { name: /kcal$/i }).boundingBox())!
+      const rail = (await page.getByTestId('step-rail').boundingBox())!
+      const panel = (await page.getByTestId('ingredient-panel').boundingBox())!
+      const summary = (await page.getByTestId('builder-summary').boundingBox())!
+      expect(strip.y).toBeGreaterThan(bowl.y + bowl.height - 2) // nutrition directly under the bowl
+      expect(rail.y).toBeGreaterThan(strip.y + strip.height) // rail starts below nutrition
+      expect(rail.x).toBeLessThan(panel.x) // rail on the left
+      expect(Math.abs(rail.y - panel.y)).toBeLessThan(4) // workspace row
+      expect(summary.y).toBeGreaterThan(panel.y)
+      expect(summary.y + summary.height).toBeLessThanOrEqual(vp.height)
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        ),
+      ).toBeLessThanOrEqual(0)
+      // scrolling the ingredient panel keeps bowl + nutrition + summary in place
+      await page.getByTestId('ingredient-panel').evaluate((e) => e.scrollTo(0, 9999))
+      expect((await page.getByTestId('bowl-renderer').boundingBox())!.y).toBeCloseTo(bowl.y, 0)
+    })
+  }
+
+  test('active highlight slides to the selected step', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+    await page.goto('/build')
+    await page.getByText('Brown Rice Kanji', { exact: true }).click()
+    const ind = page.getByTestId('rail-indicator')
+    const y0 = (await ind.boundingBox())!.y
+    expect(await ind.evaluate((e) => getComputedStyle(e).transitionDuration)).toMatch(/0\.32s/)
+    await page.getByRole('button', { name: 'Next: Protein' }).click()
+    await expect.poll(async () => (await ind.boundingBox())!.y).toBeGreaterThan(y0 + 20)
+    const proteinTab = (await page.getByRole('tab', { name: /protein/i }).boundingBox())!
+    await expect
+      .poll(async () => Math.abs((await ind.boundingBox())!.y - proteinTab.y))
+      .toBeLessThan(3)
+    await page.getByRole('tab', { name: /base/i }).click()
+    await expect.poll(async () => (await ind.boundingBox())!.y).toBeLessThan(y0 + 3)
+    await expect(page.getByRole('radio', { name: /brown rice kanji/i })).toBeChecked()
+    // a new step opens at the top of its options even if the previous one was scrolled
+    const panel = page.getByTestId('ingredient-panel')
+    await page.setViewportSize({ width: 320, height: 640 })
+    await panel.evaluate((e) => e.scrollTo(0, 9999))
+    await page.getByRole('tab', { name: /protein/i }).click()
+    await expect.poll(() => panel.evaluate((e) => e.scrollTop)).toBe(0)
+    await expect(page.getByText('Choose Your Protein')).toBeInViewport()
   })
 })

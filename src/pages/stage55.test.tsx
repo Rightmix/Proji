@@ -167,19 +167,68 @@ describe('Quick add → cart → checkout boundary', () => {
   })
 })
 
+describe('BYO refinement (Lola-style interaction, top-down bowl)', () => {
+  it('order: header → bowl → nutrition directly below → workspace (rail + panel) → summary', async () => {
+    renderAt('/build')
+    await screen.findByRole('tablist', { name: 'Bowl steps' })
+    const preview = screen.getByTestId('sticky-preview')
+    const bowl = within(preview).getByTestId('bowl-renderer')
+    const strip = within(preview).getByRole('group', { name: '0 Kcal' })
+    expect(bowl.compareDocumentPosition(strip) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const workspace = screen.getByTestId('selection-workspace')
+    expect(
+      preview.compareDocumentPosition(workspace) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+    expect(within(workspace).getByRole('tablist')).toBeInTheDocument()
+    expect(within(workspace).getByTestId('ingredient-panel')).toBeInTheDocument()
+    expect(screen.getAllByTestId('bowl-renderer')).toHaveLength(1) // one top-down view only
+  })
+
+  it('active highlight slides between steps; completed steps get a check; panel changes without losing the bowl', async () => {
+    const user = userEvent.setup()
+    renderAt('/build')
+    await user.click(await screen.findByRole('radio', { name: /brown rice kanji/i }))
+    const indicator = screen.getByTestId('rail-indicator')
+    const before = indicator.style.transform
+    await user.click(screen.getByRole('button', { name: 'Next: Protein' }))
+    expect(screen.getByRole('tab', { name: /protein/i })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByTestId('rail-indicator')).toBe(indicator) // same element animates, not re-mounted
+    expect(screen.getByRole('tab', { name: /base \(done\)/i })).toBeInTheDocument()
+    expect(screen.getAllByTestId('step-check')).toHaveLength(1)
+    await user.click(screen.getByRole('radio', { name: /pepper chicken/i }))
+    await user.click(screen.getByRole('tab', { name: /base/i }))
+    expect(screen.getByRole('radio', { name: /brown rice kanji/i })).toBeChecked()
+    expect(screen.getByTestId('live-price')).toHaveTextContent('₹260')
+    void before
+  })
+
+  it('tiles show kcal, protein, carbs, fat and price; summary shows ₹ · kcal · P · C · F', async () => {
+    renderAt('/build?base=brown-rice-kanji')
+    const tile = (await screen.findByRole('radio', { name: /millet kanji/i })).closest('label')!
+    expect(within(tile).getByTestId('tile-macros')).toHaveTextContent(
+      /P6g protein\s*C40g carbs\s*F2g fat/,
+    )
+    expect(tile).toHaveTextContent(/200 kcal/)
+    expect(tile).toHaveTextContent(/\+₹130/)
+    expect(screen.getByTestId('builder-summary')).toHaveTextContent(
+      /₹120\s*·\s*220 kcal\s*·\s*P 5g protein\s*·\s*C 45g carbs\s*·\s*F 2g fat/,
+    )
+  })
+})
+
 describe('BYO (Stage 5.5 layout)', () => {
   it('vertical step rail, 3-column tile grid with 2-column container fallback, n/4 headings', async () => {
     renderAt('/build')
     const rail = await screen.findByRole('tablist', { name: 'Bowl steps' })
     expect(rail).toHaveAttribute('aria-orientation', 'vertical')
-    expect(
-      within(rail)
-        .getAllByRole('tab')
-        .map((t) => t.textContent),
-    ).toEqual(['Base', 'Protein (locked)', 'Flavour (locked)', 'Toppings (locked)'])
+    const tabs = within(rail).getAllByRole('tab')
+    expect(tabs).toHaveLength(4)
+    ;['Base', 'Protein (locked)', 'Flavour (locked)', 'Toppings (locked)'].forEach((name, i) =>
+      expect(within(rail).getByRole('tab', { name })).toBe(tabs[i]),
+    )
     const grid = screen.getByTestId('ingredient-grid')
     expect(grid.className).toMatch(/grid-cols-3/)
-    expect(grid.className).toMatch(/@max-\[15\.5rem\]:grid-cols-2/)
+    expect(grid.className).toMatch(/@max-\[17rem\]:grid-cols-2/) // refinement: 2 cols when 3 would be cramped
     expect(screen.getByRole('group', { name: 'Choose Your Base' })).toHaveTextContent('1/4')
     const tile = screen.getByRole('radio', { name: /brown rice kanji/i }).closest('label')!
     expect(tile).toHaveTextContent(/220 kcal.*5g protein.*\+₹120/)
