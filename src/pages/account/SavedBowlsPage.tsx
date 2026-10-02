@@ -91,12 +91,15 @@ export default function SavedBowlsPage() {
 
   return (
     <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <PageTitle>Saved bowls</PageTitle>
-        <ButtonLink to="/build" variant="secondary">
-          Build a bowl
-        </ButtonLink>
-      </div>
+      <PageTitle
+        right={
+          <ButtonLink to="/build" variant="ghost" className="px-2">
+            Build a bowl
+          </ButtonLink>
+        }
+      >
+        Saved bowls
+      </PageTitle>
       {message && (
         <p role="status" className="text-select-700">
           {message}

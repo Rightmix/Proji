@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../auth/context'
 import { SaveBowlForm } from '../components/builder/SaveBowlDialog'
 import { useAccountRepository } from '../features/account/accountContext'
@@ -32,6 +32,8 @@ import {
 } from '../features/builder'
 import { prototypeAddToCart, type PrototypeCartResult } from '../features/builder/cartBoundary'
 import { useBowlBuilder } from '../features/builder/useBowlBuilder'
+import { readDraft, saveDraft } from '../features/builder/draft'
+import { addToCart } from '../features/cart/cartStore'
 import { useReducedMotion } from '../features/builder/useReducedMotion'
 
 export default function CustomizePage({
@@ -42,10 +44,21 @@ export default function CustomizePage({
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const catalog = useContext(CatalogContext)
-  const initial = useMemo(() => fromSearchParams(params, index), []) // eslint-disable-line react-hooks/exhaustive-deps -- initial URL only
+  // Initial bowl: explicit share params win; otherwise (no catalog/saved preset) the
+  // session draft, so returning via Back never loses work (Stage 5.5).
+  const [boot] = useState(() => {
+    const fromUrl = fromSearchParams(params, index)
+    if (fromUrl) return { initial: fromUrl, step: undefined, fromDraft: false }
+    if (params.get('bowl') || params.get('saved'))
+      return { initial: null, step: undefined, fromDraft: false }
+    const d = readDraft(index)
+    return { initial: d?.selection ?? null, step: d?.step, fromDraft: Boolean(d) }
+  })
+  const initial = boot.fromDraft ? null : boot.initial
   const { state, dispatch, layers, nutrition, price, items, configuration } = useBowlBuilder(
     index,
-    initial,
+    boot.initial,
+    boot.step,
   )
   const reducedMotion = useReducedMotion()
   const [dialog, setDialog] = useState<'nutrition' | 'cart' | 'save' | null>(null)
@@ -55,6 +68,7 @@ export default function CustomizePage({
   const [toast, setToast] = useState<string | null>(null)
   const [presetNote, setPresetNote] = useState<string | null>(null)
   const { selection, step, notice } = state
+  useEffect(() => saveDraft(selection, step), [selection, step])
 
   // Stage 3 → Stage 4: /build?bowl=<catalog slug> preloads compatible components.
   const bowlSlug = params.get('bowl')
@@ -147,73 +161,77 @@ export default function CustomizePage({
 
   const onAddToCart = () => {
     if (!configuration) return
-    setCartResult(prototypeAddToCart(configuration))
+    const result = prototypeAddToCart(configuration)
+    addToCart({ name: 'Custom bowl', mealSlug: null, configuration: result.configuration })
+    setCartResult(result)
     setDialog('cart')
   }
 
   return (
-    <div className="min-h-dvh bg-canvas">
+    <div className="builder-page min-h-dvh bg-canvas">
       <SkipLink />
       <main id="main" tabIndex={-1} className="focus:outline-none">
-        <div className="mx-auto max-w-md lg:grid lg:max-w-6xl lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)] lg:gap-10 lg:px-8">
-          <section
-            aria-label="Bowl preview"
-            data-testid="sticky-preview"
-            className="sticky top-0 z-20 bg-canvas px-4 pb-3 pt-safe lg:flex lg:h-dvh lg:flex-col lg:justify-center lg:pb-8"
-          >
-            <BuilderTopBar priceMinor={price.amountMinor} onBack={onBack} onShare={onShare} />
-            <div className="flex justify-center rounded-xl bg-surface py-2.5 shadow-card lg:py-8">
-              <BowlRenderer
-                layers={layers}
-                reducedMotion={reducedMotion}
-                className="builder-bowl"
-              />
-            </div>
-            <div className="mt-3">
-              <NutritionSummary totals={nutrition} highlight={selection.base !== null} />
-            </div>
-            <PrototypeNotice className="mt-1.5 text-center" />
-          </section>
-
-          <div className="flex min-h-[60dvh] flex-col px-4 lg:min-h-dvh lg:pt-8">
-            {(presetNote ?? savedLinkNote) && (
-              <p
-                role="status"
-                className="mb-3 rounded-md border border-line bg-surface px-3 py-2 text-sm"
-              >
-                {presetNote ?? savedLinkNote}
-              </p>
-            )}
-            <CategoryNavigation
-              step={step}
-              selection={selection}
-              index={index}
-              onSelect={(c) => dispatch({ type: 'goTo', step: c })}
-            />
-            <div className="mt-5 flex-1 pb-4">
-              <IngredientSelector
-                key={step}
-                category={step}
+        <div className="mx-auto max-w-md px-3 pt-safe lg:max-w-6xl lg:px-8">
+          <BuilderTopBar onBack={onBack} onShare={onShare} />
+          <div className="grid grid-cols-[4.25rem_minmax(0,1fr)] gap-2 lg:grid-cols-[5rem_minmax(0,1fr)_minmax(0,26rem)] lg:gap-8">
+            <div className="sticky top-2 self-start pt-1 lg:top-8">
+              <CategoryNavigation
+                step={step}
                 selection={selection}
                 index={index}
-                notice={notice}
-                onToggle={(id) => dispatch({ type: 'select', id })}
+                onSelect={(c) => dispatch({ type: 'goTo', step: c })}
               />
             </div>
-            <StickyFooter className="-mx-4 lg:mx-0">
-              <CustomizationFooter
-                isLast={step === 'topping'}
-                canNext={canAdvance(selection, step)}
-                canAddToCart={isComplete(selection)}
-                priceMinor={price.amountMinor}
-                onNext={() => dispatch({ type: 'next' })}
-                onAddToCart={onAddToCart}
-                onViewNutrition={() => setDialog('nutrition')}
-                onSave={configuration ? () => setDialog('save') : undefined}
-              />
-            </StickyFooter>
+            <section
+              aria-label="Bowl preview"
+              data-testid="sticky-preview"
+              className="sticky top-0 z-20 -mx-1 bg-canvas px-1 pb-2 lg:top-8 lg:col-start-2 lg:row-start-1 lg:self-start"
+            >
+              <div className="flex justify-center py-1 lg:py-6">
+                <BowlRenderer
+                  layers={layers}
+                  reducedMotion={reducedMotion}
+                  className="builder-bowl"
+                />
+              </div>
+              <NutritionSummary totals={nutrition} highlight={selection.base !== null} />
+              <PrototypeNotice className="mt-1 text-center" />
+            </section>
+            <div className="col-start-2 flex min-h-[50dvh] flex-col lg:col-start-3 lg:row-start-1 lg:pt-6">
+              {(presetNote ?? savedLinkNote) && (
+                <p
+                  role="status"
+                  className="mb-3 rounded-md border border-line bg-surface px-3 py-2 text-sm"
+                >
+                  {presetNote ?? savedLinkNote}
+                </p>
+              )}
+              <div className="flex-1 pb-4">
+                <IngredientSelector
+                  key={step}
+                  category={step}
+                  selection={selection}
+                  index={index}
+                  notice={notice}
+                  onToggle={(id) => dispatch({ type: 'select', id })}
+                />
+              </div>
+            </div>
           </div>
         </div>
+        <StickyFooter className="lg:mx-auto lg:max-w-6xl">
+          <CustomizationFooter
+            step={step}
+            canNext={canAdvance(selection, step)}
+            canAddToCart={isComplete(selection)}
+            priceMinor={price.amountMinor}
+            nutrition={nutrition}
+            onNext={() => dispatch({ type: 'next' })}
+            onAddToCart={onAddToCart}
+            onViewNutrition={() => setDialog('nutrition')}
+            onSave={configuration ? () => setDialog('save') : undefined}
+          />
+        </StickyFooter>
       </main>
 
       {toast && (

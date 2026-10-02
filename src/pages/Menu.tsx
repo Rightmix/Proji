@@ -12,7 +12,8 @@ import {
   hasActiveFilters,
   type CatalogFilters,
 } from '../features/catalog'
-import { BowlCard } from '../features/catalog/components/BowlCard'
+import { MealGrid, MealsDisclosure } from '../components/meals/MealGrid'
+import { BackHeader } from '../components/shell/BackHeader'
 import { FilterBar } from '../features/catalog/components/FilterBar'
 
 export default function Menu() {
@@ -27,9 +28,8 @@ export default function Menu() {
   const hasFixtures = bowls.some((b) => b.dataStatus === 'development-fixture')
 
   return (
-    <Container className="py-10">
-      <h1 className="font-display text-title font-semibold sm:text-3xl">Menu</h1>
-      <p className="mt-2 max-w-prose text-ink-muted">Signature kanji and grain bowls.</p>
+    <Container className="pb-8 pt-1 md:pt-6">
+      <BackHeader title="Menu" subtitle="Signature kanji and grain bowls" fallback="/" />
 
       {state.status === 'loading' && (
         <p role="status" className="mt-8 text-ink-muted">
@@ -70,13 +70,10 @@ export default function Menu() {
               )}
             </StatusMessage>
           ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {visible.map((b) => (
-                <li key={b.id}>
-                  <BowlCard bowl={b} />
-                </li>
-              ))}
-            </ul>
+            <>
+              <MealGrid bowls={visible} headingLevel={2} label="Meals" />
+              <MealsDisclosure />
+            </>
           )}
         </div>
       )}

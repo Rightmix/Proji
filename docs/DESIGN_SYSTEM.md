@@ -37,3 +37,11 @@ White and warm-grey surfaces, natural-green selection states, deep-green primary
 - **Four-screen customisation mockup:** **confirmed as the approved master on 2026-09-30.** Full resolution: `docs/design/approved/four-screen-customize-master.png`. Stage 4 comparison: `docs/design/stage-4/master-vs-implementation.jpg`.
 - Final logo artwork: the current wordmark and favicon are provisional.
 - Approved food photography.
+
+## Stage 5.5 additions (approved mobile board)
+- **Reference:** `docs/design/stage-5.5/approved-reference.jpg`.
+- **Tokens:** the action green is now `#187a40`/`#16703b`/`#13612f`. Macro dots are `macro-protein` `#5b6ee1`, `macro-carbs` `#e39a2d` and `macro-fat` `#3a9ad9`; they are always paired with text.
+- **Shell:** `BottomNav`, `ChatButton` (set `--fab-offset` to keep it above sticky CTAs), `BackHeader`/`BackButton`, `DeliverySelector`, `SearchField`.
+- **Meals:** `MealCard` (vertical, 2 per row), `MealGrid`, `MealImage` (photo, then a prototype composite, then a placeholder), `MacroLine`, `IllustrativeTag`, `CategoryCircles`.
+- **BYO:** `CategoryNavigation` is now a vertical rail; `IngredientSelector` is a tile grid using an `@container` 3→2 fallback; `CustomizationFooter` is the summary bar.
+- **Route handles:** `{ hideNav, hideChat }` hide the shell chrome on full-screen flows (detail, checkout).

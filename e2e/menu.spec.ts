@@ -8,13 +8,20 @@ async function requireFixtures(page: Page) {
   test.skip(await empty.isVisible(), 'Catalog is empty in this environment (production default)')
 }
 
-test('M-05/M-06 menu lists labelled sample bowls without prices or macros', async ({ page }) => {
+test('M-05/M-06 menu lists labelled samples; every price/kcal is marked illustrative', async ({
+  page,
+}) => {
   await requireFixtures(page)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Menu')
   await expect(page.getByRole('note')).toContainText('Development sample data')
-  expect(await page.getByRole('article').count()).toBeGreaterThanOrEqual(1)
-  const text = await page.locator('main').innerText()
-  expect(text).not.toMatch(/₹|\d+\s*(kcal|cal|g)\b|high[- ]protein|healthy/i)
+  const cards = page.getByRole('article')
+  expect(await cards.count()).toBeGreaterThanOrEqual(1)
+  for (const card of await cards.all()) {
+    const text = await card.innerText()
+    if (/₹|\d+\s*kcal/.test(text))
+      await expect(card.getByTestId('illustrative-tag').first()).toBeVisible()
+  }
+  expect(await page.locator('main').innerText()).not.toMatch(/healthy|cure/i)
 })
 
 test('F-04 filters update URL and back button restores', async ({ page }) => {
@@ -22,7 +29,7 @@ test('F-04 filters update URL and back button restores', async ({ page }) => {
   const all = await page.getByRole('article').count()
   await page.getByRole('group', { name: 'Base' }).getByText('Millet', { exact: true }).click()
   await expect(page).toHaveURL(/\?base=millet$/)
-  await expect(page.getByRole('article')).toHaveCount(1)
+  await expect(page.getByRole('article')).toHaveCount(3) // millet samples
   await page.goBack()
   await expect(page).toHaveURL(/\/menu$/)
   await expect(page.getByRole('article')).toHaveCount(all)
@@ -47,7 +54,7 @@ test('P-01/P-05 detail page works on direct navigation and from a card', async (
   await page.reload()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Kerala Pepper Chicken Kanji')
   await expect(page.getByText('Pending validation')).toHaveCount(3)
-  await expect(page.getByRole('link', { name: /customise this bowl/i })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /customi[sz]e this bowl/i })).toHaveAttribute(
     'href',
     '/build?bowl=kerala-pepper-chicken-kanji',
   )

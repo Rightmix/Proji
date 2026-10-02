@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test'
 
 const publicRoutes: [string, RegExp][] = [
-  ['/', /^Build Your Bowl\. Build Your Body\.$/],
+  ['/', /^Your Bowl\. Your Rules\.$/], // Stage 5.5 approved hero
   ['/menu', /^Menu$/],
-  ['/build', /^Customize$/], // Stage 4 master title
+  ['/build', /^Build Your Own$/], // Stage 5.5 approved title
   ['/login', /Sign in/],
   ['/unauthorized', /Access denied/],
   ['/no-such-page', /Page not found/],

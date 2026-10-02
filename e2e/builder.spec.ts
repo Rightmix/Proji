@@ -19,7 +19,7 @@ async function pickMaster(page: Page) {
 test('P-01 direct navigation renders the empty bowl', async ({ page }) => {
   const res = await page.goto('/build')
   expect(res?.status()).toBe(200)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Customize')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Build Your Own') // Stage 5.5
   await expect(page.getByText(/your bowl builds here/i)).toBeVisible()
   await expect(page.getByTestId('live-price')).toContainText('₹0')
   await expect(page.getByTestId('prototype-notice')).toBeVisible()
@@ -41,7 +41,7 @@ test('P-02 master journey: bowl layers, price and macros', async ({ page }) => {
   await expect(page.locator('[data-testid="bowl-layer"][data-phase="settled"]')).toHaveCount(5, {
     timeout: 5000,
   })
-  await expect(page.getByRole('button', { name: /add to cart/i })).toContainText('₹340')
+  await expect(page.getByRole('button', { name: /add to cart/i })).toBeEnabled() // Stage 5.5: price lives in the summary (checked above)
 })
 
 test('P-12/R-05 rapid switching with slow assets ends in the correct final state', async ({
@@ -166,7 +166,8 @@ test.describe('P-09 sticky preview and footer', () => {
       const last = page.getByRole('checkbox', { name: /pickled vegetables/i })
       await last.scrollIntoViewIfNeeded()
       const box = await page.getByText('Pickled Vegetables', { exact: true }).boundingBox()
-      const footer = await page.getByRole('button', { name: /add to cart/i }).boundingBox()
+      // Stage 5.5: the sticky summary (price + macros) sits above the CTA; use its top edge.
+      const footer = await page.getByTestId('live-price').boundingBox()
       const preview = await page.getByTestId('sticky-preview').boundingBox()
       expect(box!.y).toBeGreaterThanOrEqual(preview!.y + preview!.height - 1)
       expect(box!.y + box!.height).toBeLessThanOrEqual(footer!.y)

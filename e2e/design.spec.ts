@@ -17,27 +17,48 @@ test.describe('N-04 no horizontal overflow', () => {
   }
 })
 
-test('N-03 header stays visible after scrolling (mobile)', async ({ page }) => {
+// Stage 5.5: the approved design replaces the mobile sticky header + hamburger with a
+// persistent bottom navigation; these tests verify the new navigation instead.
+test('N-03 bottom navigation stays visible after scrolling (mobile)', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 700 })
   await page.goto('/')
-  await page.mouse.wheel(0, 1500)
-  await page.waitForFunction(() => window.scrollY > 500)
-  const box = await page.locator('header').first().boundingBox()
-  expect(box?.y).toBeLessThanOrEqual(1)
-  await expect(page.getByRole('link', { name: 'PROJI home' })).toBeInViewport()
+  await page.waitForLoadState('networkidle')
+  await expect
+    .poll(async () => {
+      await page.evaluate(() => window.scrollTo(0, 1500))
+      return page.evaluate(() => window.scrollY)
+    })
+    .toBeGreaterThan(300)
+  const nav = page.getByRole('navigation', { name: 'Primary' })
+  await expect(nav).toBeInViewport()
+  const box = await nav.boundingBox()
+  expect(box!.y + box!.height).toBeGreaterThanOrEqual(699)
 })
 
-test('N-01 mobile menu opens and navigates', async ({ page }) => {
+test('N-01 bottom nav: 4 destinations, 44px targets, active state, navigation', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 375, height: 700 })
   await page.goto('/')
-  await page.getByRole('button', { name: 'Open menu' }).click()
-  const mobileNav = page.getByRole('navigation', { name: 'Mobile' })
-  await expect(mobileNav).toBeVisible()
-  const box = await mobileNav.getByRole('link', { name: 'Menu' }).boundingBox()
-  expect(box!.height).toBeGreaterThanOrEqual(44)
-  await mobileNav.getByRole('link', { name: 'Menu' }).click()
-  await expect(page).toHaveURL(/\/menu$/)
-  await expect(mobileNav).toBeHidden()
+  const nav = page.getByRole('navigation', { name: 'Primary' })
+  await expect(nav.getByRole('link')).toHaveText(['Home', 'Build', 'Cart', 'Account'])
+  for (const l of await nav.getByRole('link').all())
+    expect((await l.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+  await expect(nav.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page')
+  await nav.getByRole('link', { name: /^Cart/ }).click()
+  await expect(page).toHaveURL(/\/cart$/)
+  await expect(nav.getByRole('link', { name: /^Cart/ })).toHaveAttribute('aria-current', 'page')
+  // chat button sits above the nav, never on top of it
+  const fab = await page.getByRole('button', { name: /chat with proji support/i }).boundingBox()
+  const navBox = await nav.boundingBox()
+  expect(fab!.y + fab!.height).toBeLessThanOrEqual(navBox!.y)
+})
+
+test('desktop uses the top navigation instead of the bottom bar', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/')
+  await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Primary' })).toBeHidden()
 })
 
 test('N-05 skip link moves focus to main', async ({ page }) => {
@@ -68,7 +89,7 @@ test.describe('A-03 reduced motion', () => {
   test('transitions collapse', async ({ page }) => {
     await page.goto('/')
     const dur = await page
-      .getByRole('link', { name: /build your bowl/i })
+      .getByRole('link', { name: /build your own/i })
       .first()
       .evaluate((el) => parseFloat(getComputedStyle(el).transitionDuration))
     expect(dur).toBeLessThan(0.02)
@@ -79,7 +100,7 @@ test('A-03 default motion keeps transitions', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await page.goto('/')
   const dur = await page
-    .getByRole('link', { name: /build your bowl/i })
+    .getByRole('link', { name: /build your own/i })
     .first()
     .evaluate((el) => parseFloat(getComputedStyle(el).transitionDuration))
   expect(dur).toBeGreaterThan(0.1)

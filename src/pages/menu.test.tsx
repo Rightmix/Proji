@@ -77,11 +77,23 @@ describe('menu content', () => {
     expect(screen.getAllByText('Coming soon').length).toBe(1)
   })
 
-  it('M-06 no prices, macros, allergens or claims on the menu', async () => {
+  // Stage 5.5 (D-024): cards may show ILLUSTRATIVE estimates for builder-composed samples,
+  // but every figure must be labelled, unmappable bowls show none, and no allergen/health claims.
+  it('M-06 figures on cards are labelled illustrative; others show none; no claims', async () => {
     renderAt('/menu')
-    await screen.findAllByRole('article')
-    const text = document.body.textContent ?? ''
-    expect(text).not.toMatch(/₹|\d+\s*(kcal|cal|g)\b|contains:|high[- ]protein|healthy|cure/i)
+    const cards = await screen.findAllByRole('article')
+    for (const card of cards) {
+      const text = card.textContent ?? ''
+      if (/₹|\d+\s*kcal/.test(text))
+        expect(within(card).getAllByTestId('illustrative-tag').length).toBeGreaterThan(0)
+    }
+    const fish = screen.getByRole('link', { name: 'Coconut Fish Millet Kanji' }).closest('article')!
+    expect(fish.textContent).not.toMatch(/₹|\d+\s*kcal/) // has a non-builder component → pending
+    expect(fish).toHaveTextContent(/nutrition pending/i)
+    expect(document.body.textContent).not.toMatch(/contains:|healthy|cure/i)
+    expect(screen.getByTestId('prototype-notice')).toHaveTextContent(
+      /illustrative estimates, not validated/i,
+    )
   })
 
   it('M-07 missing image renders labelled fallback', async () => {
@@ -100,7 +112,7 @@ describe('filters', () => {
     const base = screen.getByRole('group', { name: 'Base' })
     await user.click(within(base).getByRole('radio', { name: 'Millet' }))
     expect(router.state.location.search).toBe('?base=millet')
-    expect(screen.getAllByRole('article')).toHaveLength(1)
+    expect(screen.getAllByRole('article')).toHaveLength(3)
     await user.click(
       within(screen.getByRole('group', { name: 'Protein' })).getByRole('radio', {
         name: 'Chicken',
@@ -109,13 +121,13 @@ describe('filters', () => {
     expect(await screen.findByRole('heading', { name: /no bowls match/i })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Clear filters' }))
     expect(router.state.location.search).toBe('')
-    expect(screen.getAllByRole('article')).toHaveLength(4)
+    expect(screen.getAllByRole('article')).toHaveLength(8)
   })
 
   it('reads filters from the URL and ignores invalid ones', async () => {
     renderAt('/menu?available=1&base=sand')
     await screen.findAllByRole('article')
-    expect(screen.getAllByRole('article')).toHaveLength(2)
+    expect(screen.getAllByRole('article')).toHaveLength(6)
     expect(screen.getByRole('checkbox', { name: /available now only/i })).toBeChecked()
     expect(
       within(screen.getByRole('group', { name: 'Base' })).getByRole('radio', { name: 'All' }),
@@ -132,7 +144,7 @@ describe('detail page', () => {
     expect(screen.getByText('Pepper chicken')).toBeInTheDocument()
     expect(screen.getByText('Base')).toBeInTheDocument()
     expect(screen.getAllByText('Pending validation')).toHaveLength(3)
-    expect(screen.getByRole('link', { name: /customise this bowl/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /customi[sz]e this bowl/i })).toHaveAttribute(
       'href',
       '/build?bowl=kerala-pepper-chicken-kanji',
     )
@@ -141,7 +153,7 @@ describe('detail page', () => {
   it('P-04 unavailable bowl has no customise CTA', async () => {
     renderAt('/menu/tandoori-paneer-red-rice-kanji')
     await screen.findByRole('heading', { level: 1 })
-    expect(screen.queryByRole('link', { name: /customise/i })).toBeNull()
+    expect(screen.queryByRole('link', { name: /customi[sz]e/i })).toBeNull()
     expect(screen.getByRole('heading', { name: /not available right now/i })).toBeInTheDocument()
   })
 

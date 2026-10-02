@@ -39,3 +39,11 @@ describe('T-02 CSS theme matches TS tokens', () => {
     expect(m?.[1]?.toLowerCase()).toBe(value)
   })
 })
+
+describe('Stage 5.5 green used as link text', () => {
+  it('action-600 text is AA on canvas and surface', () => {
+    expect(contrastRatio(color['action-600'], color.canvas)).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(color['action-600'], color.surface)).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(color['action-600'], color['select-50'])).toBeGreaterThanOrEqual(4.5)
+  })
+})

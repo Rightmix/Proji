@@ -5,16 +5,22 @@ import { computePrice } from './pricing'
 import { toConfiguration } from './configuration'
 import { createReducer, initialState } from './selectionRules'
 import type { IngredientIndex } from './ingredientRepository'
-import type { Selection } from './types'
+import type { Category, Selection } from './types'
 
 /**
  * Single canonical builder state. Everything visible — layers, macros, price and the
  * final configuration — is derived from `state.selection`; nothing is stored twice.
  */
-export function useBowlBuilder(index: IngredientIndex, initial?: Selection | null) {
+export function useBowlBuilder(
+  index: IngredientIndex,
+  initial?: Selection | null,
+  initialStep?: Category,
+) {
   const reducer = useMemo(() => createReducer(index), [index])
   const [state, dispatch] = useReducer(reducer, initial ?? undefined, (sel) =>
-    sel ? reducer(initialState(), { type: 'load', selection: sel }) : initialState(),
+    sel
+      ? reducer(initialState(), { type: 'load', selection: sel, step: initialStep })
+      : initialState(),
   )
   const derived = useMemo(
     () => ({

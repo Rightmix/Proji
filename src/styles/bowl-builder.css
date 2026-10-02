@@ -7,7 +7,8 @@
 
 .builder-bowl {
   /* Shrinks on short screens so choices stay reachable; never below 120px. */
-  width: clamp(120px, min(52vw, 23dvh), 240px);
+  /* Stage 5.5: large live bowl beside the step rail; still shrinks on short screens. */
+  width: clamp(130px, min(60vw, 25dvh), 250px);
 }
 @media (max-height: 620px) {
   .builder-bowl {
@@ -16,7 +17,7 @@
 }
 @media (min-width: 1024px) {
   .builder-bowl {
-    width: min(420px, 38vw, 52dvh);
+    width: min(380px, 30vw, 50dvh);
   }
 }
 
@@ -122,4 +123,9 @@
 
 dialog.builder-dialog::backdrop {
   background: rgb(0 0 0 / 0.45);
+}
+
+/* Stage 5.5: keep focused/scrolled tiles clear of the sticky preview and summary bar. */
+html:has(.builder-page) {
+  scroll-padding-bottom: 12rem;
 }

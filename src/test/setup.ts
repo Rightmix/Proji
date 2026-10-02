@@ -23,3 +23,18 @@ if (!window.matchMedia) {
       dispatchEvent: () => false,
     }) as MediaQueryList
 }
+
+// Stage 5.5: device-local stores (cart, favourites, builder draft) must not leak between tests.
+import { afterEach } from 'vitest'
+import { cartStore } from '../features/cart/cartStore'
+import { favouritesStore } from '../features/meals/favourites'
+afterEach(() => {
+  try {
+    sessionStorage.clear()
+    localStorage.clear()
+  } catch {
+    /* ignore */
+  }
+  cartStore.reset()
+  favouritesStore.reset()
+})

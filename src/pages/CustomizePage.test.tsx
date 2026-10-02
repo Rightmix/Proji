@@ -37,7 +37,9 @@ beforeEach(() => resetPreloadCache())
 describe('CustomizePage', () => {
   it('P-01/P-13 direct /build: empty bowl, ₹0, zeros, locked steps, prototype labelling', async () => {
     renderAt()
-    expect(await screen.findByRole('heading', { level: 1, name: 'Customize' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Build Your Own' }), // Stage 5.5 title
+    ).toBeInTheDocument()
     expect(screen.getByText(/your bowl builds here/i)).toBeInTheDocument()
     expect(price()).toBe('₹0')
     expect(strip('kcal')).toBe('0 Kcal')
@@ -71,7 +73,9 @@ describe('CustomizePage', () => {
         name: /your bowl: brown rice kanji, kerala grilled fish, kerala coconut sauce, roasted peanuts, crispy shallots/i,
       }),
     ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /add to cart/i })).toHaveTextContent('₹340')
+    // Stage 5.5: price moved from the CTA into the sticky summary next to it.
+    expect(screen.getByRole('button', { name: /add to cart/i })).toBeEnabled()
+    expect(price()).toBe('₹340')
   })
 
   it('P-03 tabs: arrow keys, completed checks, back preserves', async () => {

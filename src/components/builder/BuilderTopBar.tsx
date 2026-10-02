@@ -1,18 +1,9 @@
 import { Icon } from '../ui'
-import { formatInr } from '../../features/builder/pricing'
 
-/** Master top bar: back · Customize · live illustrative price · share. */
-export function BuilderTopBar({
-  priceMinor,
-  onBack,
-  onShare,
-}: {
-  priceMinor: number
-  onBack: () => void
-  onShare: () => void
-}) {
+/** BYO header: back · "Build Your Own" · share. (Live price moved to the sticky summary.) */
+export function BuilderTopBar({ onBack, onShare }: { onBack: () => void; onShare: () => void }) {
   return (
-    <div className="flex h-header items-center gap-2">
+    <div className="grid grid-cols-[2.75rem_1fr_2.75rem] items-center">
       <button
         type="button"
         onClick={onBack}
@@ -21,11 +12,10 @@ export function BuilderTopBar({
       >
         <Icon name="arrow-left" className="size-5" />
       </button>
-      <h1 className="mr-auto text-lg font-semibold">Customize</h1>
-      <p className="text-lg font-bold tabular-nums" aria-live="polite" data-testid="live-price">
-        <span className="sr-only">Illustrative price </span>
-        {formatInr(priceMinor)}
-      </p>
+      <div className="text-center">
+        <h1 className="text-lg font-semibold">Build Your Own</h1>
+        <p className="text-xs text-ink-muted">Create your perfect PROJI</p>
+      </div>
       <button
         type="button"
         onClick={onShare}

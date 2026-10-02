@@ -53,7 +53,7 @@ beforeEach(() => resetPreloadCache())
 describe('U-07 save from the builder', () => {
   it('Save bowl appears only once complete', async () => {
     renderAt('/build?base=brown-rice-kanji')
-    await screen.findByRole('heading', { name: 'Customize' })
+    await screen.findByRole('heading', { name: 'Build Your Own' }) // Stage 5.5 title
     expect(screen.queryByRole('button', { name: 'Save bowl' })).toBeNull()
   })
 

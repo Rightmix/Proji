@@ -73,11 +73,32 @@ describe('U-01 protection', () => {
 })
 
 describe('U-02 overview and sign out', () => {
+  it('subpages have a top-left back arrow; the hub does not', async () => {
+    renderAt('/account/addresses')
+    expect(await screen.findByRole('heading', { level: 1, name: 'Addresses' })).toBeInTheDocument()
+    expect(
+      within(screen.getByRole('main')).getByRole('button', { name: 'Back' }),
+    ).toBeInTheDocument()
+  })
   it('shows email, sections and signs out', async () => {
     const { auth: a } = renderAt('/account')
     expect(await screen.findByText(/signed in as a@proji.test/i)).toBeInTheDocument()
-    for (const s of ['Profile', 'Addresses', 'Saved bowls', 'Preferences', 'Order history'])
-      expect(screen.getByRole('heading', { level: 2, name: s })).toBeInTheDocument()
+    // Stage 5.5 mobile hub: working destinations are links; unbuilt ones are disabled.
+    const main = within(screen.getByRole('main'))
+    for (const [name, href] of [
+      ['Orders', '/account/orders'],
+      ['Saved bowls', '/account/bowls'],
+      ['Favourites', '/favourites'],
+      ['Spice level', '/account/preferences'],
+      ['Cutlery', '/account/preferences'],
+      ['Addresses', '/account/addresses'],
+      ['Profile', '/account/profile'],
+    ])
+      expect(main.getByRole('link', { name: new RegExp(`^${name}`) })).toHaveAttribute('href', href)
+    for (const name of ['Subscription', 'Refer & earn', 'Offers', 'Dietary preferences'])
+      expect(main.getByText(name).closest('[aria-disabled="true"]')).toHaveTextContent(
+        /coming later/i,
+      )
     await userEvent.click(
       within(screen.getByRole('main')).getByRole('button', { name: 'Sign out' }),
     )

@@ -1,6 +1,6 @@
 # Stage 05 — Customer accounts
 
-**Status:** In review (2026-10-01), as a draft PR on `stage-5/customer-accounts`. Evidence: [STAGE_5_REPORT.md](../../STAGE_5_REPORT.md); tests: [STAGE_05_ACCEPTANCE_TESTS.md](STAGE_05_ACCEPTANCE_TESTS.md).
+**Status:** Complete. Merged to `main` (PR #29). Stage 5.5 restyles these pages without changing their behaviour.
 
 ## Objective and scope
 Sign-in, customer profiles, addresses, preferences, saved bowls and order history.

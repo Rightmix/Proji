@@ -20,16 +20,19 @@
   --color-select-100: #dcedd1;
   --color-select-500: #599a3d;
   --color-select-700: #2f6d33;
-  --color-action-600: #2e6b34;
-  --color-action-700: #245a2a;
-  --color-action-800: #1c4821;
+  --color-action-600: #187a40;
+  --color-action-700: #16703b;
+  --color-action-800: #13612f;
   --color-lime: #70c043;
   --color-beige: #d9c7a1;
   --color-bowl-900: #0e0e0e;
   --color-bowl-800: #171717;
   --color-bowl-700: #262626;
   --color-danger: #b3261e;
-  --color-focus: #2e6b34;
+  --color-focus: #187a40;
+  --color-macro-protein: #5b6ee1;
+  --color-macro-carbs: #e39a2d;
+  --color-macro-fat: #3a9ad9;
 
   /* Stage 1 aliases */
   --color-proji-lime: var(--color-lime);
@@ -75,6 +78,8 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--spacing-header) + env(safe-area-inset-top));
+    /* Stage 5.5: auto-scroll/focus keeps targets clear of the bottom nav + chat button. */
+    scroll-padding-bottom: calc(9rem + env(safe-area-inset-bottom));
   }
   body {
     @apply bg-canvas font-sans text-ink antialiased;

@@ -27,3 +27,10 @@ Code lives in `src/features/builder` (domain: rules, calculations, layers, confi
 
 ## Customer accounts (Stage 5)
 Code lives in `src/features/account` (types, validation, repositories) and `src/pages/account`. Pages read through `AccountContext`, which holds the Supabase repository or `null` when Supabase is not configured. Saved bowls connect to the builder through `savedBowlCodec` (D-022). Order history reads through `OrderHistoryContext`, which reports "not available" until Stage 6. See docs/SECURITY.md for the data-protection model.
+
+## Customer UI shell (Stage 5.5)
+- `CustomerLayout` is the app shell. It reads route `handle` flags and renders `ScrollRestoration`.
+- New routes: `/categories/:id`, `/favourites`, `/cart`, `/checkout` and `/checkout/confirmation` (a preview). All are lazy-loaded.
+- `src/features/meals` holds illustrative estimates (D-024), categories, search and favourites. `src/features/cart` holds the device-local cart; totals are always recomputed through `savedBowlCodec`.
+- The builder keeps a session draft (`features/builder/draft.ts`). It is sanitised on read, and explicit URL parameters take precedence.
+- There are no new server interactions; Stage 6 replaces the cart and checkout boundaries.

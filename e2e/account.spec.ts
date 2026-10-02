@@ -151,7 +151,7 @@ test('isolation: a second user cannot see the first user’s data or open their 
   const href = await page
     .getByRole('link', { name: 'Open Private in the builder' })
     .getAttribute('href')
-  await page.getByRole('main').getByRole('link', { name: 'Overview' }).click()
+  await page.goto('/account') // Stage 5.5: account hub replaces the Overview pill
   await page.getByRole('main').getByRole('button', { name: 'Sign out' }).click()
   await signIn(page, 'intruder@proji.test', '/account/bowls')
   await expect(page.getByRole('heading', { name: 'No saved bowls yet' })).toBeVisible()
