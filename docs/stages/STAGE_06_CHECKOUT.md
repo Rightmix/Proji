@@ -1,6 +1,6 @@
 # Stage 06 — Cart and checkout
 
-**Status:** Planned. See PROJECT_ROADMAP.md for provisional estimate.
+**Status:** Architecture conditionally approved; Phase 6.0 complete. The detailed plan, decisions and Phase 6.0 findings are in [`STAGE_06_PLAN.md`](STAGE_06_PLAN.md). Environments are described in [`../ENVIRONMENTS.md`](../ENVIRONMENTS.md).
 
 ## Objective and scope
 Cart, server-validated price snapshots, delivery zones, scheduling, payments and confirmations.

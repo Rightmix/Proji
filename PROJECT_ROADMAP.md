@@ -1,6 +1,6 @@
 # PROJI — 12-Stage Development Roadmap
 
-**Status date:** 2026-10-02. Stages 1–5 are merged to `main`. Stage 5.5 (customer UI redesign) is in review as a draft PR. Stage 6 has not started. Estimates are planning ranges, not commitments.
+**Status date:** 2026-10-13. Stages 1–5.5 are merged to `main`; the Stage 5 hosted migration is unverified. Stage 6 Phase 6.0 (planning) is complete; implementation has not started. Estimates are planning ranges, not commitments.
 
 | Stage | Scope | Estimate | Status |
 |---|---|---|---|
@@ -8,9 +8,9 @@
 | 02 | Branding and responsive design system | 2–4 days | Complete: merged (`4625119`); production verified per owner. Visual direction still provisional |
 | 03 | Signature bowl menu and catalog | 2–3 days | Complete: merged (`1edba53`); production verified per owner. Catalog shows no data until Stage 7 |
 | 04 | Four-step Build Your Bowl and live estimates | 16–30 days (visual milestone) | Complete as a prototype milestone: merged (PR #28, `6241487`); production verified per owner. Prototype assets and illustrative values remain |
-| 05 | Customer accounts, addresses, saved bowls | 2–4 days | Complete: merged (PR #29, `cdcf132`) |
-| 5.5 | Customer UI redesign (approved mobile board) | 2–4 days | In review (draft PR on `stage-5.5/customer-ui-redesign`) |
-| 06 | Cart, checkout, delivery scheduling, payments | 4–6 days | Planned |
+| 05 | Customer accounts, addresses, saved bowls | 2–4 days | Merged (PR #29, `cdcf132`) and locally verified. **Hosted migration not verified** (see STAGE_06_PLAN.md §11.2) |
+| 5.5 | Customer UI redesign (approved mobile board) | 2–4 days | Complete: merged (PR #30, `b794eb8`) |
+| 06 | Cart, checkout, delivery scheduling, payments | 4–6 days | Architecture conditionally approved. Phase 6.0 (verification and planning) done; 6.1–6.6 not started. See `docs/stages/STAGE_06_PLAN.md` |
 | 07 | Admin/R&D: ingredients, standardized recipes, macros, costs | 5–8 days | Planned |
 | 08 | Kitchen display, production and inventory | 4–7 days | Planned |
 | 09 | Subscription plans, pauses, renewals | 4–7 days | Planned |
