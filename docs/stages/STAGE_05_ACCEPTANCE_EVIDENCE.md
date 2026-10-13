@@ -9,3 +9,8 @@
 | U-15 | Pass | `e2e/a11y.spec.ts`: account pages and dialogs |
 | X-01 | Pass | Vitest 272/272; Playwright 149 passed, 5 skipped |
 | Hosted verification | **Pending** | Requires the migration to be applied to the PROJI Supabase project and a preview deployment |
+
+## Reconciliation (2026-10-13, Stage 6 Phase 6.0)
+- The roadmap said "Complete". This evidence and `STAGE_5_REPORT.md` say the migration was **not applied to any hosted project**. The roadmap now reads "merged and locally verified; hosted migration not verified".
+- The hosted PROJI project (`uwkgnsjdbjoqiimvefct`) is **paused**, so its migration history could not be read. Until it is, treat the Stage 5 migration as not applied.
+- The repository's Stage 1 migration files (one full file and two empty, hosted-named files) may not match the hosted history. They must be reconciled before `supabase db push`. See `docs/stages/STAGE_06_PLAN.md` §11.2.

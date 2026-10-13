@@ -50,3 +50,9 @@ Future entries: date, change, reason, affected requirements/stages, Issue or PR 
 - Reason: owner-supplied interaction reference (behaviour only; PROJI design retained).
 - Affected: Stage 5.5 / PR #30. No business-rule, nutrition, Supabase or migration changes.
 - Verification: Vitest 309/309, Playwright 199/199, lint, prettier, tsc, build and check:bundle pass; builder visual baselines regenerated.
+
+## 2026-10-13 — Stage 6 Phase 6.0: verification and planning
+- Added the Stage 6 plan (`docs/stages/STAGE_06_PLAN.md`), `docs/ENVIRONMENTS.md` and decisions D-027 to D-036. Covered: commerce catalog, ordering closed until prices are approved, pay on delivery, sign-in required, concurrency-safe delivery capacity, isolated test orders, and pending delivery and tax settings.
+- Reconciled the Stage 5 status: merged and locally verified; hosted migration unverified because the PROJI project is paused. Flagged a Stage 1 migration-history mismatch.
+- Reason: owner conditionally approved the Stage 6 architecture and asked for Phase 6.0 only.
+- Verification: read-only Supabase metadata checks only, plus a local parallel-session proof of the capacity design. No code, migrations, seeds or hosted changes.
